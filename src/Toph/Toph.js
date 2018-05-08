@@ -33,6 +33,11 @@ class Toph extends Base {
         this.getStatus = this.getStatus.bind(this);
         this.getRandomImage = this.getRandomImage.bind(this);
         this.getImageTypes = this.getImageTypes.bind(this);
+        this.getImageTags = this.getImageTags.bind(this);
+        this.getImageInfo = this.getImageInfo.bind(this);
+        this.addTagsToImage = this.addTagsToImage.bind(this);
+        this.removeTagsFromImage = this.removeTagsFromImage.bind(this);
+        this.deleteImage = this.deleteImage.bind(this);
     }
 
     /**
