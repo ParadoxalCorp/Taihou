@@ -13,6 +13,19 @@ const constants = require('../constants');
  * @prop {boolean} preview Only apply to getImageTypes(), if true, a preview image image is sent along. Defaults to false
  * @prop {string} fileType Only apply to getRandomImage(), can be "jpeg", "gif" or "png"
  * @prop {string} tags Only apply to getRandomImage(), a comma-separated list of tags the image should have
+ * @prop {number} beforeNextRequest Only apply per-request, time in milliseconds before the next request in the queue should be executed. Is ignored if burst mode is enabled
+ * @prop {number} requestsPerMinute Only apply when instantiating the module, regardless of the mode, define how many requests can be done in a minute. 60000 effectively disable the cooldown
+ */
+
+/**  
+ * @typedef UploadOptions
+ * @prop {string} file Absolute path to a file, takes priority over url argument
+ * @prop {string} url Url pointing directly at the image you want to upload, you may only use file or url
+ * @prop {string} baseType The type of the image; e.g, the category (pat, cuddle and such)
+ * @prop {boolean} hidden Whether the uploaded image should be private or not
+ * @prop {boolean} nsfw Whether this image has content that could be considered NSFW (not safe for work)
+ * @prop {string} tags Comma-separated list of tags to add to the image, they will inherit the hidden property of the image
+ * @prop {string} source Url pointing to the original source of the image
  */
 
 /**
@@ -26,11 +39,12 @@ class Toph extends Base {
     constructor(token, options, axios) {
         super(options);
         this.token = token;
-        this.options = options.toph || options.images ? Object.assign(options, options.toph || options.images) : options;
+        this.options = options.toph || options.images ? Object.assign({...options }, options.toph || options.images) : options;
         this.options.requestsPerMinute = this.options.requestsPerMinute || constants.toph.requestsPerMinute;
         this.axios = axios;
         //As we heavily rely on this, ensure it is always bound to all methods regardless of the context
         this.getStatus = this.getStatus.bind(this);
+        this.uploadImage = this.uploadImage.bind(this);
         this.getRandomImage = this.getRandomImage.bind(this);
         this.getImageTypes = this.getImageTypes.bind(this);
         this.getImageTags = this.getImageTags.bind(this);
@@ -45,7 +59,7 @@ class Toph extends Base {
      * 
      * @param {TophOptions} [options={}] An optional object of options
      * @memberof Toph
-     * @returns {boolean} Whether or not Toph is online 
+     * @returns {Promise<boolean>} Whether or not Toph is online 
      */
     getStatus(options = {}) {
         return new Promise(async(resolve, reject) => {
@@ -61,12 +75,55 @@ class Toph extends Base {
     }
 
     /**
+     * Upload an image to Toph
+     * 
+     * @param {UploadOptions} uploadOptions An object of options 
+     * @param {TophOptions} [options={}] 
+     * @returns {Promise<any>} An image object with a file key
+     * @memberof Toph
+     */
+    uploadImage(uploadOptions = {}, options = {}) {
+        return new Promise(async(resolve, reject) => {
+            options = Object.assign({...this.options }, options);
+            if ((typeof uploadOptions.file !== 'string' && typeof uploadOptions.url !== 'string') || typeof uploadOptions.baseType !== 'string') {
+                return reject(new this.error('At least either the uploadOptions.file or the uploadOptions.url and the uploadOptions.baseType parameters are required'));
+            }
+            if (uploadOptions.file) {
+                await this._readFileAsync(uploadOptions.file)
+                    .then(buffer => {
+                        uploadOptions.file = buffer;
+                        if (typeof options.headers === 'object') {
+                            options.headers['Content-Type'] = 'multipart/form-data';
+                        } else {
+                            options.headers = { 'Content-Type': 'multipart/form-data' };
+                        }
+                    })
+                    .catch(err => {
+                        return reject(new this.error(err));
+                    });
+            }
+            options.data = uploadOptions;
+            this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}/images/upload`, 'post', options), options)
+                .then(res => {
+                    if (res.request.res.statusCode !== 200) {
+                        reject(new this.error(res));
+                    } else {
+                        resolve(res.data);
+                    }
+                })
+                .catch(err => {
+                    reject(new this.error(err));
+                });
+        })
+    }
+
+    /**
      * Get a random image from weeb.sh, you can specify both type and options.tags. You can also set the type to null and only specify options.tags
      * 
      * @param {string} type - The type, either this or options.tags is mandatory. To get a list of types, use getImageTypes, as well as getImageTags for a list of tags
      * @param {TophOptions} [options={}] 
      * @memberof Toph
-     * @returns {any} The parsed image object, refer to https://docs.weeb.sh/#random-image for its structure
+     * @returns {Promise<any>} The parsed image object, refer to https://docs.weeb.sh/#random-image for its structure
      */
     getRandomImage(type, options = {}) {
         return new Promise(async(resolve, reject) => {
@@ -80,7 +137,7 @@ class Toph extends Base {
             options.params = this.addURLParams({ type: type }, ['nsfw', 'tags', 'hidden', 'filetype'], options);
             this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}/images/random`, 'get', options), options)
                 .then(res => {
-                    if (res.data.status !== 200) {
+                    if (res.request.res.statusCode !== 200) {
                         reject(new this.error(res));
                     } else {
                         resolve(res.data);
@@ -96,7 +153,7 @@ class Toph extends Base {
      * Get a list of image types and a preview image for each if you want
      * 
      * @param {TophOptions} [options={}] 
-     * @returns {any} The parsed response object that you can see here https://docs.weeb.sh/#image-types
+     * @returns {Promise<any>} The parsed response object that you can see here https://docs.weeb.sh/#image-types
      * @memberof Toph
      */
     getImageTypes(options = {}) {
@@ -105,7 +162,7 @@ class Toph extends Base {
             options.params = this.addURLParams({}, ['nsfw', 'hidden', 'preview'], options);
             this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}/images/types`, 'get', options), options)
                 .then(res => {
-                    if (res.data.status !== 200) {
+                    if (res.request.res.statusCode !== 200) {
                         reject(new this.error(res));
                     } else {
                         return resolve(res.data);
@@ -121,7 +178,7 @@ class Toph extends Base {
      * Get a list of image tags
      * 
      * @param {TophOptions} [options={}] 
-     * @returns {any} The parsed response object that you can see here https://docs.weeb.sh/#image-tags
+     * @returns {Promise<any>} The parsed response object that you can see here https://docs.weeb.sh/#image-tags
      * @memberof Toph
      */
     getImageTags(options = {}) {
@@ -130,7 +187,7 @@ class Toph extends Base {
             options.params = this.addURLParams({}, ['hidden', 'nsfw'], options);
             this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}/images/tags`, 'get', options), options)
                 .then(res => {
-                    if (res.data.status !== 200) {
+                    if (res.request.res.statusCode !== 200) {
                         reject(new this.error(res));
                     } else {
                         return resolve(res.data);
@@ -147,7 +204,7 @@ class Toph extends Base {
      * 
      * @param {string} id - The ID of the image to get info from
      * @param {TophOptions} [options={}] 
-     * @returns {any} The parsed response object that you can see here https://docs.weeb.sh/#image-info
+     * @returns {Promise<any>} The parsed response object that you can see here https://docs.weeb.sh/#image-info
      * @memberof Toph
      */
     getImageInfo(id, options = {}) {
@@ -158,7 +215,7 @@ class Toph extends Base {
             options = Object.assign({...this.options }, options);
             this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}/images/info/${id}`, 'get', options), options)
                 .then(res => {
-                    if (res.data.status !== 200) {
+                    if (res.request.res.statusCode !== 200) {
                         reject(new this.error(res));
                     } else {
                         return resolve(res.data);
@@ -176,7 +233,7 @@ class Toph extends Base {
      * @param {string} id - The ID of the image to add tags to
      * @param {array} tags - An array of tags, either strings or {name: 'tag_name'} objects 
      * @param {TophOptions} [options={}]
-     * @returns {any} An object detailing added and skipped tags
+     * @returns {Promise<any>} An object detailing added and skipped tags
      * @memberof Toph
      */
     addTagsToImage(id, tags, options = {}) {
@@ -193,7 +250,7 @@ class Toph extends Base {
             }
             this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}/images/info/${id}/tags`, 'post', options), options)
                 .then(res => {
-                    if (res.data.status !== 200) {
+                    if (res.request.res.statusCode !== 200) {
                         reject(new this.error(res));
                     } else {
                         return resolve(res.data);
@@ -211,7 +268,7 @@ class Toph extends Base {
      * @param {string} id - The ID of the image to remove tags from
      * @param {array} tags - An array of tags, either strings or {name: 'tag_name'} objects 
      * @param {TophOptions} [options={}]
-     * @returns {any} 
+     * @returns {Promise<any>} 
      * @memberof Toph
      */
     removeTagsFromImage(id, tags, options = {}) {
@@ -228,7 +285,7 @@ class Toph extends Base {
             }
             this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}/images/info/${id}/tags`, 'delete', options), options)
                 .then(res => {
-                    if (res.data.status !== 200) {
+                    if (res.request.res.statusCode !== 200) {
                         reject(new this.error(res));
                     } else {
                         return resolve(res.data);
@@ -245,7 +302,7 @@ class Toph extends Base {
      * 
      * @param {string} id - The ID of the image to remove tags from
      * @param {TophOptions} [options={}]
-     * @returns {any} An object containing a success confirmation
+     * @returns {Promise<any>} An object containing a success confirmation
      * @memberof Toph
      */
     deleteImage(id, options = {}) {
@@ -257,7 +314,7 @@ class Toph extends Base {
             options.params = this.addURLParams({ id: id }, [], options);
             this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}/images/info/${id}`, 'delete', options), options)
                 .then(res => {
-                    if (res.data.status !== 200) {
+                    if (res.request.res.statusCode !== 200) {
                         reject(new this.error(res));
                     } else {
                         return resolve(res.data);

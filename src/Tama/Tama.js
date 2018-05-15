@@ -21,7 +21,7 @@ class Tama extends Base {
     constructor(token, options) {
         super(options);
         this.token = token;
-        this.options = options.tama || options.images ? Object.assign(options, options.tama || options.images) : options;
+        this.options = options.tama || options.images ? Object.assign({...options }, options.tama || options.images) : options;
         this.options.requestsPerMinute = this.options.requestsPerMinute || constants.tama.requestsPerMinute;
         this.axios = axios;
     }
@@ -34,7 +34,7 @@ class Tama extends Base {
      * @returns {boolean} Whether or not Tama is online 
      */
     async getStatus(options = {}) {
-        options = Object.assign(this.options, options);
+        options = Object.assign({...this.options }, options);
         this.status(this.baseURL, axios, options)
             .then(res => {
                 return res.data.status === 200 ? true : false;

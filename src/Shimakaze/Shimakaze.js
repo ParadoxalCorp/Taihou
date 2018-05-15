@@ -1,13 +1,15 @@
 'use strict';
 
-const axios = require('axios');
 const Base = require('../Base');
 const constants = require('../constants');
 
 /**  
  * @typedef ShimakazeOptions
- * @prop {string} [baseURL] - The base URL
- * @prop {number} [timeout] - Time in milliseconds before the request should be aborted
+ * @prop {string} baseURL - The base URL
+ * @prop {number} timeout - Time in milliseconds before the request should be aborted
+ * @prop {any} headers - An object of additional headers following a {'header': 'value'} format, note that those must not be content-type, user-agent or authorization header
+ * @prop {number} beforeNextRequest - Only apply per-request, time in milliseconds before the next request in the queue should be executed. Is ignored if burst mode is enabled
+ * @prop {number} requestsPerMinute - Only apply when instantiating the module, regardless of the mode, define how many requests can be done in a minute. 60000 effectively disable the cooldown
  */
 
 /**
@@ -18,10 +20,10 @@ const constants = require('../constants');
  * @prop {any} options The **effective** options; e.g, if you specified options specific to Shimakaze, those override the base ones
  */
 class Shimakaze extends Base {
-    constructor(token, options) {
+    constructor(token, options, axios) {
         super(options);
         this.token = token;
-        this.options = options.shimakaze || options.images ? Object.assign(options, options.shimakaze || options.images) : options;
+        this.options = options.shimakaze || options.images ? Object.assign({...options }, options.shimakaze || options.images) : options;
         this.options.requestsPerMinute = this.options.requestsPerMinute || constants.shimakaze.requestsPerMinute;
         this.axios = axios;
     }
@@ -34,7 +36,7 @@ class Shimakaze extends Base {
      * @returns {boolean} Whether or not Shimakaze is online 
      */
     async getStatus(options = {}) {
-        options = Object.assign(this.options, options);
+        options = Object.assign({...this.options }, options);
         this.status(this.baseURL, axios, options)
             .then(res => {
                 return res.data.status === 200 ? true : false;

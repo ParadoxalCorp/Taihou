@@ -33,12 +33,13 @@ class Base {
      */
     formatRequest(url, method, options) {
         return async() => {
-            return this.axios[method](url, {
+            const config = {
                 timeout: options.timeout,
-                data: ['post', 'put', 'patch', 'delete'].includes(method) ? options.data : undefined,
+                data: ['post', 'put', 'patch'].includes(method) ? options.data : undefined,
                 headers: options.headers ? { 'User-Agent': options.userAgent, ...options.headers } : { 'User-Agent': options.userAgent },
                 params: options.params
-            });
+            }
+            return this.axios[method](url, ['post', 'put', 'patch'].includes(method) ? null : config, ['post', 'put', 'patch'].includes(method) ? config : null);
         }
     }
 
@@ -53,12 +54,34 @@ class Base {
      * @private
      */
     addURLParams(baseParams, paramsToAdd, options) {
-        for (const param of paramsToAdd) {
-            if (typeof options[param] !== 'undefined') {
-                baseParams[param] = options[param];
+        if (!Array.isArray(paramsToAdd)) {
+            baseParams = Object.assign(baseParams, paramsToAdd);
+        } else {
+            for (const param of paramsToAdd) {
+                if (typeof options[param] !== 'undefined') {
+                    baseParams[param] = options[param];
+                }
             }
         }
         return baseParams;
+    }
+
+    /**
+     * 
+     * 
+     * @param {string} path 
+     * @returns {Promise<any>}
+     * @memberof Base
+     */
+    _readFileAsync(path) {
+        return new Promise((resolve, reject) => {
+            fs.readFile(path, (err, data) => {
+                if (err) {
+                    return reject(err);
+                }
+                resolve(data);
+            });
+        });
     }
 }
 
