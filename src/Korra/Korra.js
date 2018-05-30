@@ -79,20 +79,20 @@ class Korra extends Base {
     generateSimple(type, simpleOptions = {}, options = {}) {
         return new Promise(async(resolve, reject) => {
             if (typeof type !== 'string') {
-                return reject(new this.error('The type parameter is mandatory'));
+                return reject(new this.Error('The type parameter is mandatory'));
             }
             options = Object.assign({...this.options }, options);
             options.params = this.addURLParams({ type: type }, simpleOptions, options);
             this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}/auto-image/generate`, 'get', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
-                        reject(new this.error(res));
+                        reject(new this.Error(res));
                     } else {
                         resolve(res.data);
                     }
                 })
                 .catch(err => {
-                    reject(new this.error(err));
+                    reject(new this.Error(err));
                 });
         });
     }
@@ -107,20 +107,20 @@ class Korra extends Base {
     generateDiscordStatus(status, avatar, options = {}) {
         return new Promise(async(resolve, reject) => {
             if (typeof status !== 'string' || typeof avatar !== 'string') {
-                return reject(new this.error('Both the status and avatar parameters are required'));
+                return reject(new this.Error('Both the status and avatar parameters are required'));
             }
             options = Object.assign({...this.options }, options);
             options.params = this.addURLParams({ status: status, avatar: encodeURIComponent(avatar) }, [], options);
             this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}/auto-image/discord-status`, 'get', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
-                        reject(new this.error(res));
+                        reject(new this.Error(res));
                     } else {
                         resolve(res.data);
                     }
                 })
                 .catch(err => {
-                    reject(new this.error(err));
+                    reject(new this.Error(err));
                 });
         })
     }
@@ -134,7 +134,7 @@ class Korra extends Base {
     generateWaifuInsult(avatar, options = {}) {
         return new Promise(async(resolve, reject) => {
             if (typeof avatar !== 'string') {
-                return reject(new this.error('The avatar parameter is required'));
+                return reject(new this.Error('The avatar parameter is required'));
             }
             options = Object.assign({...this.options }, options);
             options.data = {
@@ -143,13 +143,13 @@ class Korra extends Base {
             this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}/auto-image/waifu-insult`, 'post', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
-                        reject(new this.error(res));
+                        reject(new this.Error(res));
                     } else {
                         resolve(res.data);
                     }
                 })
                 .catch(err => {
-                    reject(new this.error(err));
+                    reject(new this.Error(err));
                 });
         })
     }
@@ -164,7 +164,7 @@ class Korra extends Base {
     generateLoveShip(firstTarget, secondTarget, options = {}) {
         return new Promise(async(resolve, reject) => {
             if (typeof firstTarget !== 'string' || typeof secondTarget !== 'string') {
-                return reject(new this.error('Both the firstTarget and secondTarget parameters are required'));
+                return reject(new this.Error('Both the firstTarget and secondTarget parameters are required'));
             }
             options = Object.assign({...this.options }, options);
             options.data = {
@@ -174,13 +174,13 @@ class Korra extends Base {
             this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}/auto-image/love-ship`, 'post', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
-                        reject(new this.error(res));
+                        reject(new this.Error(res));
                     } else {
                         resolve(res.data);
                     }
                 })
                 .catch(err => {
-                    reject(new this.error(err));
+                    reject(new this.Error(err));
                 });
         });
     }
@@ -194,20 +194,20 @@ class Korra extends Base {
     generateLicense(licenseOptions, options) {
         return new Promise(async(resolve, reject) => {
             if (typeof licenseOptions !== 'object') {
-                return reject(new this.error('The licenseOptions parameter is required'));
+                return reject(new this.Error('The licenseOptions parameter is required'));
             }
             options = Object.assign({...this.options }, options);
             options.data = licenseOptions;
             this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}/auto-image/license`, 'post', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
-                        reject(new this.error(res));
+                        reject(new this.Error(res));
                     } else {
                         resolve(res.data);
                     }
                 })
                 .catch(err => {
-                    reject(new this.error(err));
+                    reject(new this.Error(err));
                 });
         });
     }

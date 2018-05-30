@@ -59,6 +59,9 @@ class Toph extends Base {
      * 
      * @param {TophOptions} [options={}] An optional object of options
      * @memberof Toph
+     * @example 
+     * getStatus()
+     * .then(console.log) //true
      * @returns {Promise<boolean>} Whether or not Toph is online 
      */
     getStatus(options = {}) {
@@ -79,6 +82,10 @@ class Toph extends Base {
      * 
      * @param {UploadOptions} uploadOptions An object of options 
      * @param {TophOptions} [options={}] 
+     * @example 
+     * uploadImage({url: 'https://wew.png', type: 'wew', hidden: true, nsfw: false})
+     * .then(console.log)
+     * .catch(console.error)
      * @returns {Promise<any>} An image object with a file key
      * @memberof Toph
      */
@@ -86,7 +93,7 @@ class Toph extends Base {
         return new Promise(async(resolve, reject) => {
             options = Object.assign({...this.options }, options);
             if ((typeof uploadOptions.file !== 'string' && typeof uploadOptions.url !== 'string') || typeof uploadOptions.baseType !== 'string') {
-                return reject(new this.error('At least either the uploadOptions.file or the uploadOptions.url and the uploadOptions.baseType parameters are required'));
+                return reject(new this.Error('At least either the uploadOptions.file or the uploadOptions.url and the uploadOptions.baseType parameters are required'));
             }
             if (uploadOptions.file) {
                 await this._readFileAsync(uploadOptions.file)
@@ -99,20 +106,20 @@ class Toph extends Base {
                         }
                     })
                     .catch(err => {
-                        return reject(new this.error(err));
+                        return reject(new this.Error(err));
                     });
             }
             options.data = uploadOptions;
             this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}/images/upload`, 'post', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
-                        reject(new this.error(res));
+                        reject(new this.Error(res));
                     } else {
                         resolve(res.data);
                     }
                 })
                 .catch(err => {
-                    reject(new this.error(err));
+                    reject(new this.Error(err));
                 });
         })
     }
@@ -123,13 +130,17 @@ class Toph extends Base {
      * @param {string} type - The type, either this or options.tags is mandatory. To get a list of types, use getImageTypes, as well as getImageTags for a list of tags
      * @param {TophOptions} [options={}] 
      * @memberof Toph
+     * @example 
+     * getRandomImage('pat')
+     * .then(console.log)
+     * .catch(console.error)
      * @returns {Promise<any>} The parsed image object, refer to https://docs.weeb.sh/#random-image for its structure
      */
     getRandomImage(type, options = {}) {
         return new Promise(async(resolve, reject) => {
             options = Object.assign({...this.options }, options);
             if (!type && !options.tags) {
-                Promise.reject(new this.error('Either the type or tags parameter is mandatory'));
+                return Promise.reject(new this.Error('Either the type or tags parameter is mandatory'));
             }
             if (options.tags) {
                 options.tags = options.tags.replace(/\s+/gi, '');
@@ -138,13 +149,13 @@ class Toph extends Base {
             this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}/images/random`, 'get', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
-                        reject(new this.error(res));
+                        reject(new this.Error(res));
                     } else {
                         resolve(res.data);
                     }
                 })
                 .catch(err => {
-                    reject(new this.error(err));
+                    reject(new this.Error(err));
                 });
         });
     }
@@ -154,6 +165,10 @@ class Toph extends Base {
      * 
      * @param {TophOptions} [options={}] 
      * @returns {Promise<any>} The parsed response object that you can see here https://docs.weeb.sh/#image-types
+     * @example
+     * getImageTypes()
+     * .then(console.log)
+     * .catch(console.error)
      * @memberof Toph
      */
     getImageTypes(options = {}) {
@@ -163,13 +178,13 @@ class Toph extends Base {
             this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}/images/types`, 'get', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
-                        reject(new this.error(res));
+                        reject(new this.Error(res));
                     } else {
                         return resolve(res.data);
                     }
                 })
                 .catch(err => {
-                    reject(new this.error(err));
+                    reject(new this.Error(err));
                 });
         })
     }
@@ -178,6 +193,10 @@ class Toph extends Base {
      * Get a list of image tags
      * 
      * @param {TophOptions} [options={}] 
+     * @example 
+     * getImageTags()
+     * .then(console.log)
+     * .catch(console.error)
      * @returns {Promise<any>} The parsed response object that you can see here https://docs.weeb.sh/#image-tags
      * @memberof Toph
      */
@@ -188,13 +207,13 @@ class Toph extends Base {
             this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}/images/tags`, 'get', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
-                        reject(new this.error(res));
+                        reject(new this.Error(res));
                     } else {
                         return resolve(res.data);
                     }
                 })
                 .catch(err => {
-                    reject(new this.error(err));
+                    reject(new this.Error(err));
                 });
         })
     }
@@ -204,25 +223,29 @@ class Toph extends Base {
      * 
      * @param {string} id - The ID of the image to get info from
      * @param {TophOptions} [options={}] 
+     * @example 
+     * getImageInfo('6d875e')
+     * .then(console.log)
+     * .catch(console.error)
      * @returns {Promise<any>} The parsed response object that you can see here https://docs.weeb.sh/#image-info
      * @memberof Toph
      */
     getImageInfo(id, options = {}) {
         return new Promise(async(resolve, reject) => {
             if (!id) {
-                return reject(new this.error('The ID is mandatory'));
+                return reject(new this.Error('The ID is mandatory'));
             }
             options = Object.assign({...this.options }, options);
             this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}/images/info/${id}`, 'get', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
-                        reject(new this.error(res));
+                        reject(new this.Error(res));
                     } else {
                         return resolve(res.data);
                     }
                 })
                 .catch(err => {
-                    reject(new this.error(err));
+                    reject(new this.Error(err));
                 });
         });
     }
@@ -233,6 +256,10 @@ class Toph extends Base {
      * @param {string} id - The ID of the image to add tags to
      * @param {array} tags - An array of tags, either strings or {name: 'tag_name'} objects 
      * @param {TophOptions} [options={}]
+     * @example 
+     * addTagsToImage('6d875e', ['baguette'])
+     * .then(console.log)
+     * .catch(console.error)
      * @returns {Promise<any>} An object detailing added and skipped tags
      * @memberof Toph
      */
@@ -251,13 +278,13 @@ class Toph extends Base {
             this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}/images/info/${id}/tags`, 'post', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
-                        reject(new this.error(res));
+                        reject(new this.Error(res));
                     } else {
                         return resolve(res.data);
                     }
                 })
                 .catch(err => {
-                    reject(new this.error(err));
+                    reject(new this.Error(err));
                 });
         })
     }
@@ -268,6 +295,10 @@ class Toph extends Base {
      * @param {string} id - The ID of the image to remove tags from
      * @param {array} tags - An array of tags, either strings or {name: 'tag_name'} objects 
      * @param {TophOptions} [options={}]
+     * @example 
+     * removeTagsFromImage('6d875e')
+     * .then(console.log)
+     * .catch(console.error)
      * @returns {Promise<any>} 
      * @memberof Toph
      */
@@ -286,13 +317,13 @@ class Toph extends Base {
             this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}/images/info/${id}/tags`, 'delete', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
-                        reject(new this.error(res));
+                        reject(new this.Error(res));
                     } else {
                         return resolve(res.data);
                     }
                 })
                 .catch(err => {
-                    reject(new this.error(err));
+                    reject(new this.Error(err));
                 });
         })
     }
@@ -302,6 +333,10 @@ class Toph extends Base {
      * 
      * @param {string} id - The ID of the image to remove tags from
      * @param {TophOptions} [options={}]
+     * @example 
+     * deleteImage('6d875e')
+     * .then(console.log)
+     * .catch(console.error)
      * @returns {Promise<any>} An object containing a success confirmation
      * @memberof Toph
      */
@@ -315,13 +350,13 @@ class Toph extends Base {
             this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}/images/info/${id}`, 'delete', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
-                        reject(new this.error(res));
+                        reject(new this.Error(res));
                     } else {
                         return resolve(res.data);
                     }
                 })
                 .catch(err => {
-                    reject(new this.error(err));
+                    reject(new this.Error(err));
                 });
         })
     }

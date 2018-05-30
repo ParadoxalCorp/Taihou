@@ -6,7 +6,7 @@ const Error = require('./Error');
 class Base {
     constructor(options) {
         this.requestHandler = new RequestHandler(options);
-        this.error = Error;
+        this.Error = Error;
     }
 
     /**

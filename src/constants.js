@@ -16,6 +16,10 @@ const constants = {
     },
     shimakaze: {
         requestsPerMinute: 500
+    },
+    endpoints: {
+        GET_USER_REPUTATION: (botID, userID) => `/reputation/${botID}/${userID}`,
+        GIVE_REPUTATION: (botID, targetID) => `/reputation/${botID}/${targetID}`
     }
 };
 
