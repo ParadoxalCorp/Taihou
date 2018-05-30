@@ -23,6 +23,10 @@ const constants = {
         GET_USER_REPUTATION: (botID, userID) => `/reputation/${botID}/${userID}`,
         GIVE_REPUTATION: (botID, targetID) => `/reputation/${botID}/${targetID}`,
         RESET_USER_REPUTATION: (botID, targetID) => `/reputation/${botID}/${targetID}/reset`,
+        INCREASE_USER_REPUTATION: (botID, targetID) => `/reputation/${botID}/${targetID}/increase`,
+        DECREASE_USER_REPUTATION: (botID, targetID) => `/reputation/${botID}/${targetID}/decrease`,
+        GET_SETTINGS: '/reputation/settings',
+        SET_SETTINGS: '/reputation/settings',
         //Toph
         GET_TOPH_STATUS: '/images',
         UPLOAD_IMAGE: '/images/upload',
