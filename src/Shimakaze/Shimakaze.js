@@ -19,6 +19,13 @@ const constants = require('../constants');
  * @prop {string} sourceID - The ID of the user who is giving reputation
  */
 
+ /**  
+ * @typedef ResetUserReputationOptions
+ * @prop {string} botID - The ID of the bot reputation database to use
+ * @prop {string} targetID - The ID of the user to reset
+ * @prop {boolean} resetCooldown - Whether to reset the user cooldown field too, false by default
+ */
+
 /**
  * 
  * 
@@ -44,7 +51,7 @@ class Shimakaze extends Base {
      */
     async getStatus(options = {}) {
         options = Object.assign({...this.options }, options);
-        this.status(this.baseURL, axios, options)
+        this.status(`${this.baseURL}${constants.endpoints.GET_SHIMAKAZE_STATUS}`, axios, options)
             .then(res => {
                 return res.data.status === 200 ? true : false;
             })
@@ -57,7 +64,7 @@ class Shimakaze extends Base {
      * Get the reputation of a user
      * 
      * @param {string} botID - The ID of the bot reputation database to access
-     * @param {userID} userID - The ID of the user to get reputation from
+     * @param {userID} targetID - The ID of the user to get reputation of
      * @param {ShimakazeOptions} [options={}] 
      * @example 
      * getUserReputation('327144735359762432', '184051394179891201')
@@ -65,11 +72,11 @@ class Shimakaze extends Base {
      * .catch(console.error)
      * @returns {Promise<any>} The parsed response object, refer to https://docs.weeb.sh/#get-reputation-of-user for its structure
      */
-    getUserReputation(botID, userID, options = {}) {
+    getUserReputation(botID, targetID, options = {}) {
         return new Promise(async(resolve, reject) => {
             options = Object.assign({...this.options }, options);
-            if (typeof botID !== 'string' || typeof userID !== 'string') {
-                return reject(new this.Error('Both the botID and userID parameters are required'));
+            if (typeof botID !== 'string' || typeof targetID !== 'string') {
+                return reject(new this.Error('Both the botID and targetID parameters are required'));
             }
             this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.GET_USER_REPUTATION(botID, userID)}`, 'get', options), options)
                 .then(res => {
@@ -106,6 +113,74 @@ class Shimakaze extends Base {
                 source_user: reputationOptions.sourceID
             };
             this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.GIVE_REPUTATION(reputationOptions.botID, reputationOptions.targetID)}`, 'post', options), options)
+                .then(res => {
+                    if (res.request.res.statusCode !== 200) {
+                        reject(new this.Error(res));
+                    } else {
+                        resolve(res.data);
+                    }
+                })
+                .catch(err => {
+                    reject(new this.Error(err));
+                });
+        });
+    }
+
+    /**
+     * Reset the reputation of a user
+     * 
+     * @param {ResetUserReputationOptions} resetOptions - The ID of the bot reputation database to access
+     * @param {ShimakazeOptions} [options={}] 
+     * @example 
+     * resetUserReputation({botID: '327144735359762432', targetID: '184051394179891201'})
+     * .then(console.log)
+     * .catch(console.error)
+     * @returns {Promise<any>} The parsed response object, refer to https://docs.weeb.sh/#reset-user-reputation for its structure
+     */
+    resetUserReputation(resetOptions, options = {}) {
+        return new Promise(async(resolve, reject) => {
+            options = Object.assign({...this.options }, options);
+            if (typeof resetOptions.botID !== 'string' || typeof resetOptions.targetID !== 'string') {
+                return reject(new this.Error('Both the botID and userID parameters are required'));
+            }
+            if (resetOptions.resetCooldown && typeof resetOptions.resetCooldown === 'boolean') {
+                options.params = this.addURLParams({ cooldown: resetOptions.resetCooldown }, [], options);
+            }
+            this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.RESET_USER_REPUTATION(botID, userID)}`, 'get', options), options)
+                .then(res => {
+                    if (res.request.res.statusCode !== 200) {
+                        reject(new this.Error(res));
+                    } else {
+                        resolve(res.data);
+                    }
+                })
+                .catch(err => {
+                    reject(new this.Error(err));
+                });
+        });
+    }
+
+        /**
+     * Reset the reputation of a user
+     * 
+     * @param {ResetUserReputationOptions} resetOptions - The ID of the bot reputation database to access
+     * @param {ShimakazeOptions} [options={}] 
+     * @example 
+     * resetUserReputation({botID: '327144735359762432', targetID: '184051394179891201'})
+     * .then(console.log)
+     * .catch(console.error)
+     * @returns {Promise<any>} The parsed response object, refer to https://docs.weeb.sh/#reset-user-reputation for its structure
+     */
+    resetUserReputation(resetOptions, options = {}) {
+        return new Promise(async(resolve, reject) => {
+            options = Object.assign({...this.options }, options);
+            if (typeof resetOptions.botID !== 'string' || typeof resetOptions.targetID !== 'string') {
+                return reject(new this.Error('Both the botID and userID parameters are required'));
+            }
+            if (resetOptions.resetCooldown && typeof resetOptions.resetCooldown === 'boolean') {
+                options.params = this.addURLParams({ cooldown: resetOptions.resetCooldown }, [], options);
+            }
+            this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.RESET_USER_REPUTATION(botID, userID)}`, 'get', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
                         reject(new this.Error(res));

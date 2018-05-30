@@ -59,7 +59,7 @@ class Korra extends Base {
     getStatus(options = {}) {
         return new Promise(async(resolve, reject) => {
             options = Object.assign({...this.options }, options);
-            this.status(`${options.baseURL}/auto-image`, options)
+            this.status(`${options.baseURL}${constants.endpoints.GET_KORRA_STATUS}`, options)
                 .then(res => {
                     return resolve(res.data.status === 200 ? true : false);
                 })
@@ -83,7 +83,7 @@ class Korra extends Base {
             }
             options = Object.assign({...this.options }, options);
             options.params = this.addURLParams({ type: type }, simpleOptions, options);
-            this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}/auto-image/generate`, 'get', options), options)
+            this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.GENERATE_SIMPLE}`, 'get', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
                         reject(new this.Error(res));
@@ -111,7 +111,7 @@ class Korra extends Base {
             }
             options = Object.assign({...this.options }, options);
             options.params = this.addURLParams({ status: status, avatar: encodeURIComponent(avatar) }, [], options);
-            this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}/auto-image/discord-status`, 'get', options), options)
+            this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.GENERATE_DISCORD_STATUS}`, 'get', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
                         reject(new this.Error(res));
@@ -140,7 +140,7 @@ class Korra extends Base {
             options.data = {
                 "avatar": avatar
             }
-            this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}/auto-image/waifu-insult`, 'post', options), options)
+            this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.GENERATE_WAIFU_INSULT}`, 'post', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
                         reject(new this.Error(res));
@@ -171,7 +171,7 @@ class Korra extends Base {
                 targetOne: firstTarget,
                 targetTwo: secondTarget
             }
-            this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}/auto-image/love-ship`, 'post', options), options)
+            this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.GENERATE_LOVE_SHIP}`, 'post', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
                         reject(new this.Error(res));
@@ -198,7 +198,7 @@ class Korra extends Base {
             }
             options = Object.assign({...this.options }, options);
             options.data = licenseOptions;
-            this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}/auto-image/license`, 'post', options), options)
+            this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.GENERATE_LICENSE}`, 'post', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
                         reject(new this.Error(res));

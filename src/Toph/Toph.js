@@ -67,7 +67,7 @@ class Toph extends Base {
     getStatus(options = {}) {
         return new Promise(async(resolve, reject) => {
             options = Object.assign({...this.options }, options);
-            this.status(`${options.baseURL}/images`, options)
+            this.status(`${options.baseURL}${constants.endpoints.GET_TOPH_STATUS}`, options)
                 .then(res => {
                     return resolve(res.data.status === 200 ? true : false);
                 })
@@ -110,7 +110,7 @@ class Toph extends Base {
                     });
             }
             options.data = uploadOptions;
-            this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}/images/upload`, 'post', options), options)
+            this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.UPLOAD_IMAGE}`, 'post', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
                         reject(new this.Error(res));
@@ -146,7 +146,7 @@ class Toph extends Base {
                 options.tags = options.tags.replace(/\s+/gi, '');
             }
             options.params = this.addURLParams({ type: type }, ['nsfw', 'tags', 'hidden', 'filetype'], options);
-            this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}/images/random`, 'get', options), options)
+            this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.GET_RANDOM_IMAGE}`, 'get', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
                         reject(new this.Error(res));
@@ -175,7 +175,7 @@ class Toph extends Base {
         return new Promise(async(resolve, reject) => {
             options = Object.assign({...this.options }, options);
             options.params = this.addURLParams({}, ['nsfw', 'hidden', 'preview'], options);
-            this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}/images/types`, 'get', options), options)
+            this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.GET_IMAGE_TYPES}`, 'get', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
                         reject(new this.Error(res));
@@ -204,7 +204,7 @@ class Toph extends Base {
         return new Promise(async(resolve, reject) => {
             options = Object.assign({...this.options }, options);
             options.params = this.addURLParams({}, ['hidden', 'nsfw'], options);
-            this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}/images/tags`, 'get', options), options)
+            this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.GET_IMAGE_TAGS}`, 'get', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
                         reject(new this.Error(res));
@@ -236,7 +236,7 @@ class Toph extends Base {
                 return reject(new this.Error('The ID is mandatory'));
             }
             options = Object.assign({...this.options }, options);
-            this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}/images/info/${id}`, 'get', options), options)
+            this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.GET_IMAGE_INFO(id)}`, 'get', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
                         reject(new this.Error(res));
@@ -275,7 +275,7 @@ class Toph extends Base {
             options.data = {
                 tags: tags
             }
-            this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}/images/info/${id}/tags`, 'post', options), options)
+            this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.ADD_TAGS_TO_IMAGE(id)}`, 'post', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
                         reject(new this.Error(res));
@@ -314,7 +314,7 @@ class Toph extends Base {
             options.data = {
                 tags: tags
             }
-            this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}/images/info/${id}/tags`, 'delete', options), options)
+            this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.REMOVE_TAGS_FROM_IMAGE(id)}`, 'delete', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
                         reject(new this.Error(res));
@@ -347,7 +347,7 @@ class Toph extends Base {
             }
             options = Object.assign({...this.options }, options);
             options.params = this.addURLParams({ id: id }, [], options);
-            this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}/images/info/${id}`, 'delete', options), options)
+            this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.DELETE_IMAGE(id)}`, 'delete', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
                         reject(new this.Error(res));
