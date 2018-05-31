@@ -1178,7 +1178,7 @@ it executed as much requests as the limit in the past minute already, in this ca
 
 To see clearly how these two modes acts, we'll take a simple use case:
 
-Let's say there is 61 to Korra (image-generation) in the queue. The default rate-limit on Korra is 60 requests/minute 
+Let's say there is 61 requests to Korra (image-generation) in the queue. The default rate-limit on Korra is 60 requests/minute 
 
 The sequential mode will execute a request/second (`60000 / 60 => 1000 milliseconds => 1 second`) and therefore will finish executing all the requests 
 after 1 minute and 1 second
