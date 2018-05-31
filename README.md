@@ -1227,8 +1227,7 @@ up-to-date. As well as when you delete a setting/sub-setting, it is deleted from
 
 A `cached` property is added to the objects that can potentially be returned from the cache, if `true`, it means the returned object is from the cache
 
-Though there's still a lot of use cases where the cache might not welcome, if for example another process (another bot for example) change the settings, the cached 
-version won't be updated, as Taihou is not able to know that. This is why the `useCache` option is available, you can either set it to `false` for the entire 
+Though there's still a lot of use cases where the cache might not be welcome, if for example another process (another bot for example) change the settings, the cached version won't be updated, as Taihou is not able to know that. This is why the `useCache` option is available, you can either set it to `false` for the entire 
 service, or set it to `false` for specific requests. 
 
 The `useCache` option gives you great control over the cache, as when you set it to `false` you, you tell to Taihou "Do not interact with the cache at all" rather 
