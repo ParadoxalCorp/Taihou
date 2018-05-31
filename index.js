@@ -36,7 +36,7 @@ class Taihou {
      * Creates an instance of Taihou.
      * @param {string} token - The token, required to use weeb.sh
      * @param {boolean} wolken - A boolean representing whether the token is a wolke token or not, needed for taihou to work properly
-     * @param {any} options - An object of options
+     * @param {TaihouOptions} options - An object of options
      * @memberof Taihou
      */
     constructor(token, wolken, options = {}) {
@@ -55,9 +55,9 @@ class Taihou {
             }
         });
         this.options = Object.assign({
-            baseURL: constants.productionBaseURL,
-            userAgent: constants.defaultUserAgent,
-            timeout: constants.timeout
+            baseURL: options.baseURL || constants.productionBaseURL,
+            userAgent: options.userAgent || constants.defaultUserAgent,
+            timeout: options.timeout || constants.timeout
         }, options);
         this.toph = new Toph(token, this.options, this.axios);
         this.korra = new Korra(token, this.options, this.axios);

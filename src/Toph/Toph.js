@@ -13,8 +13,9 @@ const constants = require('../constants');
  * @prop {boolean} preview Only apply to getImageTypes(), if true, a preview image image is sent along. Defaults to false
  * @prop {string} fileType Only apply to getRandomImage(), can be "jpeg", "gif" or "png"
  * @prop {string} tags Only apply to getRandomImage(), a comma-separated list of tags the image should have
+ * @prop {boolean} burst Whether to enable the request handler's burst mode, false by default
  * @prop {number} beforeNextRequest Only apply per-request, time in milliseconds before the next request in the queue should be executed. Is ignored if burst mode is enabled
- * @prop {number} requestsPerMinute Only apply when instantiating the module, regardless of the mode, define how many requests can be done in a minute. 60000 effectively disable the cooldown
+ * @prop {number} requestsPerMinute Only apply when instantiating the module, regardless of the mode, define how many requests can be done in a minute. 0 makes it limitless
  */
 
 /**  
@@ -60,7 +61,7 @@ class Toph extends Base {
      * @param {TophOptions} [options={}] An optional object of options
      * @memberof Toph
      * @example 
-     * getStatus()
+     * weebSH.toph.getStatus()
      * .then(console.log) //true
      * @returns {Promise<boolean>} Whether or not Toph is online 
      */
@@ -69,7 +70,7 @@ class Toph extends Base {
             options = Object.assign({...this.options }, options);
             this.status(`${options.baseURL}${constants.endpoints.GET_TOPH_STATUS}`, options)
                 .then(res => {
-                    return resolve(res.data.status === 200 ? true : false);
+                    return resolve(res.request.res.statusCode === 200 ? true : false);
                 })
                 .catch((err) => {
                     return resolve(false);
@@ -83,7 +84,7 @@ class Toph extends Base {
      * @param {UploadOptions} uploadOptions An object of options 
      * @param {TophOptions} [options={}] 
      * @example 
-     * uploadImage({url: 'https://wew.png', type: 'wew', hidden: true, nsfw: false})
+     * weebSH.toph.uploadImage({url: 'https://wew.png', type: 'wew', hidden: true, nsfw: false})
      * .then(console.log)
      * .catch(console.error)
      * @returns {Promise<any>} An image object with a file key
@@ -131,7 +132,7 @@ class Toph extends Base {
      * @param {TophOptions} [options={}] 
      * @memberof Toph
      * @example 
-     * getRandomImage('pat')
+     * weebSH.toph.getRandomImage('pat')
      * .then(console.log)
      * .catch(console.error)
      * @returns {Promise<any>} The parsed image object, refer to https://docs.weeb.sh/#random-image for its structure
@@ -166,7 +167,7 @@ class Toph extends Base {
      * @param {TophOptions} [options={}] 
      * @returns {Promise<any>} The parsed response object that you can see here https://docs.weeb.sh/#image-types
      * @example
-     * getImageTypes()
+     * weebSH.toph.getImageTypes()
      * .then(console.log)
      * .catch(console.error)
      * @memberof Toph
@@ -194,7 +195,7 @@ class Toph extends Base {
      * 
      * @param {TophOptions} [options={}] 
      * @example 
-     * getImageTags()
+     * weebSH.toph.getImageTags()
      * .then(console.log)
      * .catch(console.error)
      * @returns {Promise<any>} The parsed response object that you can see here https://docs.weeb.sh/#image-tags
@@ -224,7 +225,7 @@ class Toph extends Base {
      * @param {string} id - The ID of the image to get info from
      * @param {TophOptions} [options={}] 
      * @example 
-     * getImageInfo('6d875e')
+     * weebSH.toph.getImageInfo('6d875e')
      * .then(console.log)
      * .catch(console.error)
      * @returns {Promise<any>} The parsed response object that you can see here https://docs.weeb.sh/#image-info
@@ -257,7 +258,7 @@ class Toph extends Base {
      * @param {array} tags - An array of tags, either strings or {name: 'tag_name'} objects 
      * @param {TophOptions} [options={}]
      * @example 
-     * addTagsToImage('6d875e', ['baguette'])
+     * weebSH.toph.addTagsToImage('6d875e', ['baguette'])
      * .then(console.log)
      * .catch(console.error)
      * @returns {Promise<any>} An object detailing added and skipped tags
@@ -271,7 +272,6 @@ class Toph extends Base {
                 return reject('The tags to add must be an array of strings');
             }
             options = Object.assign({...this.options }, options);
-            options.params = this.addURLParams({ id: id }, [], options);
             options.data = {
                 tags: tags
             }
@@ -296,7 +296,7 @@ class Toph extends Base {
      * @param {array} tags - An array of tags, either strings or {name: 'tag_name'} objects 
      * @param {TophOptions} [options={}]
      * @example 
-     * removeTagsFromImage('6d875e')
+     * weebSH.toph.removeTagsFromImage('6d875e')
      * .then(console.log)
      * .catch(console.error)
      * @returns {Promise<any>} 
@@ -310,7 +310,6 @@ class Toph extends Base {
                 return reject('The tags to add must be an array of strings');
             }
             options = Object.assign({...this.options }, options);
-            options.params = this.addURLParams({ id: id }, [], options);
             options.data = {
                 tags: tags
             }
@@ -334,7 +333,7 @@ class Toph extends Base {
      * @param {string} id - The ID of the image to remove tags from
      * @param {TophOptions} [options={}]
      * @example 
-     * deleteImage('6d875e')
+     * weebSH.toph.deleteImage('6d875e')
      * .then(console.log)
      * .catch(console.error)
      * @returns {Promise<any>} An object containing a success confirmation
@@ -346,7 +345,6 @@ class Toph extends Base {
                 return reject('The image ID is mandatory');
             }
             options = Object.assign({...this.options }, options);
-            options.params = this.addURLParams({ id: id }, [], options);
             this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.DELETE_IMAGE(id)}`, 'delete', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {

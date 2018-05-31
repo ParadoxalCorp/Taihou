@@ -43,7 +43,16 @@ const constants = {
         GENERATE_DISCORD_STATUS: '/auto-image/discord-status',
         GENERATE_WAIFU_INSULT: '/auto-image/waifu-insult',
         GENERATE_LOVE_SHIP: '/auto-image/love-ship',
-        GENERATE_LICENSE: '/auto-image/license'
+        GENERATE_LICENSE: '/auto-image/license',
+        //Tama
+        GET_TAMA_STATUS: '/settings',
+        GET_SETTING: (type, id) => `/settings/${type}/${id}`,
+        CREATE_OR_UPDATE_SETTING: (type, id) => `/settings/${type}/${id}`,
+        DELETE_SETTING: (type, id) => `/settings/${type}/${id}`,
+        LIST_SUBSETTINGS: (type, id, subType) => `/settings/${type}/${id}/${subType}`,
+        GET_SUBSETTING: (type, id, subType, subId) => `/settings/${type}/${id}/${subType}/${subId}`,
+        CREATE_OR_UPDATE_SUBSETTING: (type, id, subType, subId) => `/settings/${type}/${id}/${subType}/${subId}`,
+        DELETE_SUBSETTING: (type, id, subType, subId) => `/settings/${type}/${id}/${subType}/${subId}`,
     }
 };
 

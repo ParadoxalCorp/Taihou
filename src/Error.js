@@ -1,5 +1,16 @@
 'use strict';
 
+/**
+ * Only the message and stack property are guaranteed, as all the other properties can appear only if the error originated from the request
+ *
+ * @extends Error
+ * @prop {string} message A message describing the error
+ * @prop {string} stack The stacktrace of the error
+ * @prop {number} [code] If the error originated from the request made, the HTTP status code of the request
+ * @prop {string|object} [data] The data returned by the weeb.sh servers
+ * @prop {any} [originalRequest] The sent request  
+ * @prop {any} [config] The config of the sent request
+ */
 class TaihouError extends Error {
     constructor(err) {
         super(err);
