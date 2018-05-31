@@ -1234,3 +1234,4 @@ The `useCache` option gives you great control over the cache, as when you set it
 than something like "Do not fetch from the cache". Meaning that if you for example request a setting deletion, and that `useCache` is set to `false`, the cached 
 version (if any) won't be deleted. Same if you create/update a setting, if `useCache` is set to `false`, the setting won't be added/updated in the cache.
 
+![Taihou](https://cdn.discordapp.com/attachments/356224772184735756/451848094963990528/unknown.png)
