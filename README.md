@@ -1219,7 +1219,7 @@ Only the message and stack property are guaranteed, as all the other properties 
 As you can store things such as prefixes with Tama, and that you most likely want to access the said prefixes whenever your bot receive a message, Taihou 
 comes with a enabled by default built-in cache to not spam the API and to serve settings faster.
 
-Whenever you request a setting/subsetting (like with the `Toph.getSetting()` for example), the object returned by weeb.sh will be put into the cache, then,
+Whenever you request a setting/subsetting (like with the `Tama.getSetting()` method for example), the object returned by weeb.sh will be put into the cache, then,
 when you request the same setting again, the cached one will be returned. You can explicitly tell Taihou to not use the cache by passing the `useCache: false` option
 
 Not only when you fetch a setting, but also when you create/update a setting/subsetting, the cache will be updated, to ensure that the cached version is always
