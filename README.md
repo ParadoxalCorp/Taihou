@@ -1172,7 +1172,7 @@ If you want to wait longer or shorter after a specific request, you can pass the
 #### Burst mode
 
 The burst mode works pretty much exactly like if there was no rate-limiter, except that there is still a limit. Queued requests will be directly executed, unless
-it executed has much requests as the limit in the past minute already, in this case, it will wait for the said minute to pass before executing the rest
+it executed as much requests as the limit in the past minute already, in this case, it will wait for the said minute to pass before executing the rest
 
 #### Sequential VS Burst example case
 
