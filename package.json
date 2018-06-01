@@ -1,0 +1,18 @@
+{
+    "name": "taihou",
+    "version": "1.0.0",
+    "description": "A wrapper for weeb.sh",
+    "main": "index.js",
+    "repository": {
+        "url": "https://github.com/ParadoxalCorp/Taihou"
+    },
+    "author": "ParadoxOrigins",
+    "license": "GPL-3.0",
+    "bugs": {
+        "url": "https://github.com/ParadoxalCorp/Taihou/issues"
+    },
+    "homepage": "https://github.com/ParadoxalCorp/Taihou#readme",
+    "dependencies": {
+        "axios": "^0.18.0"
+    }
+}
