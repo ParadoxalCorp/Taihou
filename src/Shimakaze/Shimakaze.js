@@ -89,7 +89,7 @@ class Shimakaze extends Base {
     async getStatus(options = {}) {
         return new Promise(async(resolve, reject) => {
             options = Object.assign({...this.options }, options);
-            this.status(`${this.baseURL}${constants.endpoints.GET_SHIMAKAZE_STATUS}`, axios, options)
+            this.status(`${options.baseURL}${constants.endpoints.GET_SHIMAKAZE_STATUS}`, options)
                 .then(res => {
                     return resolve(res.request.res.statusCode === 200 ? true : false);
                 })
@@ -112,6 +112,11 @@ class Shimakaze extends Base {
      * @returns {Promise<any>} The parsed response object, refer to https://docs.weeb.sh/#get-reputation-of-user for its structure
      */
     getUserReputation(botID, targetID, options = {}) {
+
+        //Capture the stacktrace before it gets destroyed by the async operation
+        let _stackTrace = {};
+        Error.captureStackTrace(_stackTrace);
+
         return new Promise(async(resolve, reject) => {
             options = Object.assign({...this.options }, options);
             let actualBotID = botID;
@@ -119,18 +124,18 @@ class Shimakaze extends Base {
                 actualBotID = this.options.botID;
             }
             if (typeof actualBotID !== 'string' || typeof targetID !== 'string') {
-                return reject(new this.Error('Both the botID and targetID parameters are required'));
+                return reject(new this.Error('Both the botID and targetID parameters are required', _stackTrace));
             }
-            this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.GET_USER_REPUTATION(actualBotID, userID)}`, 'get', options), options)
+            this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.GET_USER_REPUTATION(actualBotID, targetID)}`, 'get', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
-                        reject(new this.Error(res));
+                        reject(new this.Error(res, _stackTrace));
                     } else {
                         resolve(res.data);
                     }
                 })
                 .catch(err => {
-                    reject(new this.Error(err));
+                    reject(new this.Error(err, _stackTrace));
                 });
         });
     }
@@ -147,13 +152,18 @@ class Shimakaze extends Base {
      * @returns {Promise<any>} The parsed response object, refer to https://docs.weeb.sh/#get-reputation-of-user for its structure
      */
     giveReputation(reputationOptions, options = {}) {
+
+        //Capture the stacktrace before it gets destroyed by the async operation
+        let _stackTrace = {};
+        Error.captureStackTrace(_stackTrace);
+
         return new Promise(async(resolve, reject) => {
             options = Object.assign({...this.options }, options);
             if (!reputationOptions.botID) {
                 reputationOptions.botID = this.options.botID;
             }
             if (typeof reputationOptions.botID !== 'string' || typeof reputationOptions.targetID !== 'string' || typeof reputationOptions.sourceID !== 'string') {
-                return reject(new this.Error('The reputationOptions.botID, reputationOptions.targetID and reputationOptions.sourceID parameters are required'));
+                return reject(new this.Error('The reputationOptions.botID, reputationOptions.targetID and reputationOptions.sourceID parameters are required', _stackTrace));
             }
             options.data = {
                 source_user: reputationOptions.sourceID
@@ -161,13 +171,13 @@ class Shimakaze extends Base {
             this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.GIVE_REPUTATION(reputationOptions.botID, reputationOptions.targetID)}`, 'post', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
-                        reject(new this.Error(res));
+                        reject(new this.Error(res, _stackTrace));
                     } else {
                         resolve(res.data);
                     }
                 })
                 .catch(err => {
-                    reject(new this.Error(err));
+                    reject(new this.Error(err, _stackTrace));
                 });
         });
     }
@@ -184,27 +194,32 @@ class Shimakaze extends Base {
      * @returns {Promise<any>} The parsed response object, refer to https://docs.weeb.sh/#reset-user-reputation for its structure
      */
     resetUserReputation(resetOptions, options = {}) {
+
+        //Capture the stacktrace before it gets destroyed by the async operation
+        let _stackTrace = {};
+        Error.captureStackTrace(_stackTrace);
+
         return new Promise(async(resolve, reject) => {
             options = Object.assign({...this.options }, options);
             if (!resetOptions.botID) {
                 resetOptions.botID = this.options.botID;
             }
             if (typeof resetOptions.botID !== 'string' || typeof resetOptions.targetID !== 'string') {
-                return reject(new this.Error('Both the resetOptions.botID and resetOptions.targetID parameters are required'));
+                return reject(new this.Error('Both the resetOptions.botID and resetOptions.targetID parameters are required', _stackTrace));
             }
             if (resetOptions.resetCooldown && typeof resetOptions.resetCooldown === 'boolean') {
                 options.params = this.addURLParams({ cooldown: resetOptions.resetCooldown }, [], options);
             }
-            this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.RESET_USER_REPUTATION(resetOptions.botID, resetOptions.targetID)}`, 'get', options), options)
+            this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.RESET_USER_REPUTATION(resetOptions.botID, resetOptions.targetID)}`, 'post', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
-                        reject(new this.Error(res));
+                        reject(new this.Error(res, _stackTrace));
                     } else {
                         resolve(res.data);
                     }
                 })
                 .catch(err => {
-                    reject(new this.Error(err));
+                    reject(new this.Error(err, _stackTrace));
                 });
         });
     }
@@ -221,27 +236,32 @@ class Shimakaze extends Base {
      * @returns {Promise<any>} The parsed response object, refer to https://docs.weeb.sh/#increase-user-reputation for its structure
      */
     increaseUserReputation(increaseOptions, options = {}) {
+
+        //Capture the stacktrace before it gets destroyed by the async operation
+        let _stackTrace = {};
+        Error.captureStackTrace(_stackTrace);
+
         return new Promise(async(resolve, reject) => {
             options = Object.assign({...this.options }, options);
             if (!increaseOptions.botID) {
                 increaseOptions.botID = this.options.botID;
             }
             if (typeof increaseOptions.botID !== 'string' || typeof increaseOptions.targetID !== 'string' || typeof increaseOptions.increase !== 'number') {
-                return reject(new this.Error('The increaseOptions.botID, increaseOptions.targetID and increaseOptions.increase parameters are required'));
+                return reject(new this.Error('The increaseOptions.botID, increaseOptions.targetID and increaseOptions.increase parameters are required', _stackTrace));
             }
             options.data = {
                 increase: increaseOptions.increase
             };
-            this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.INCREASE_USER_REPUTATION(increaseOptions.botID, increaseOptions.userID)}`, 'post', options), options)
+            this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.INCREASE_USER_REPUTATION(increaseOptions.botID, increaseOptions.targetID)}`, 'post', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
-                        reject(new this.Error(res));
+                        reject(new this.Error(res, _stackTrace));
                     } else {
                         resolve(res.data);
                     }
                 })
                 .catch(err => {
-                    reject(new this.Error(err));
+                    reject(new this.Error(err, _stackTrace));
                 });
         });
     }
@@ -258,27 +278,32 @@ class Shimakaze extends Base {
      * @returns {Promise<any>} The parsed response object, refer to https://docs.weeb.sh/#decrease-user-reputation for its structure
      */
     decreaseUserReputation(decreaseOptions, options = {}) {
+
+        //Capture the stacktrace before it gets destroyed by the async operation
+        let _stackTrace = {};
+        Error.captureStackTrace(_stackTrace);
+
         return new Promise(async(resolve, reject) => {
             options = Object.assign({...this.options }, options);
             if (!decreaseOptions.botID) {
                 decreaseOptions.botID = this.options.botID;
             }
             if (typeof decreaseOptions.botID !== 'string' || typeof decreaseOptions.targetID !== 'string' || typeof decreaseOptions.decrease !== 'number') {
-                return reject(new this.Error('The decreaseOptions.botID, decreaseOptions.targetID and decreaseOptions.decrease parameters are required'));
+                return reject(new this.Error('The decreaseOptions.botID, decreaseOptions.targetID and decreaseOptions.decrease parameters are required', _stackTrace));
             }
             options.data = {
                 decrease: decreaseOptions.decrease
             };
-            this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.DECREASE_USER_REPUTATION(decreaseOptions.botID, decreaseOptions.userID)}`, 'post', options), options)
+            this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.DECREASE_USER_REPUTATION(decreaseOptions.botID, decreaseOptions.targetID)}`, 'post', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
-                        reject(new this.Error(res));
+                        reject(new this.Error(res, _stackTrace));
                     } else {
                         resolve(res.data);
                     }
                 })
                 .catch(err => {
-                    reject(new this.Error(err));
+                    reject(new this.Error(err, _stackTrace));
                 });
         });
     }
@@ -294,18 +319,23 @@ class Shimakaze extends Base {
      * @returns {Promise<any>} The parsed response object, refer to https://docs.weeb.sh/#get-settings for its structure
      */
     getSettings(options = {}) {
+
+        //Capture the stacktrace before it gets destroyed by the async operation
+        let _stackTrace = {};
+        Error.captureStackTrace(_stackTrace);
+
         return new Promise(async(resolve, reject) => {
             options = Object.assign({...this.options }, options);
             this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.GET_SETTINGS}`, 'get', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
-                        reject(new this.Error(res));
+                        reject(new this.Error(res, _stackTrace));
                     } else {
                         resolve(res.data);
                     }
                 })
                 .catch(err => {
-                    reject(new this.Error(err));
+                    reject(new this.Error(err, _stackTrace));
                 });
         });
     }
@@ -322,22 +352,27 @@ class Shimakaze extends Base {
      * @returns {Promise<any>} The parsed response object, refer to https://docs.weeb.sh/#set-settings for its structure
      */
     setSettings(settings, options = {}) {
+
+        //Capture the stacktrace before it gets destroyed by the async operation
+        let _stackTrace = {};
+        Error.captureStackTrace(_stackTrace);
+
         return new Promise(async(resolve, reject) => {
             options = Object.assign({...this.options }, options);
-            if (typeof options.settings !== 'object' || Array.isArray(options.settings)) {
-                return reject(new this.Error('The settings objects is mandatory, you cannot update nothing'));
+            if (typeof settings !== 'object' || Array.isArray(settings)) {
+                return reject(new this.Error('The settings objects is mandatory, you cannot update nothing', _stackTrace));
             }
             options.data = settings;
             this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.SET_SETTINGS}`, 'post', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
-                        reject(new this.Error(res));
+                        reject(new this.Error(res, _stackTrace));
                     } else {
                         resolve(res.data);
                     }
                 })
                 .catch(err => {
-                    reject(new this.Error(err));
+                    reject(new this.Error(err, _stackTrace));
                 });
         });
     }

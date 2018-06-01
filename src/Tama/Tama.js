@@ -94,7 +94,7 @@ class Tama extends Base {
     async getStatus(options = {}) {
         return new Promise(async(resolve, reject) => {
             options = Object.assign({...this.options }, options);
-            this.status(`${this.baseURL}${constants.endpoints.GET_TAMA_STATUS}`, axios, options)
+            this.status(`${options.baseURL}${constants.endpoints.GET_TAMA_STATUS}`, options)
                 .then(res => {
                     return resolve(res.request.res.statusCode === 200 ? true : false);
                 })
@@ -117,10 +117,15 @@ class Tama extends Base {
      * @returns {Promise<any>} The parsed response object, with a `cached` property representing whether the returned setting is from the cache, refer to https://docs.weeb.sh/#get-setting for its structure
      */
     getSetting(type, id, options = {}) {
+
+        //Capture the stacktrace before it gets destroyed by the async operation
+        let _stackTrace = {};
+        Error.captureStackTrace(_stackTrace);
+
         return new Promise(async(resolve, reject) => {
             options = Object.assign({...this.options }, options);
             if (typeof type !== 'string' || (typeof id !== 'string' && typeof id !== 'number')) {
-                return reject(new this.Error('The type and id parameters are mandatory'));
+                return reject(new this.Error('The type and id parameters are mandatory', _stackTrace));
             }
             if (options.useCache) {
                 const setting = this.settingsCache.get(`${type}/${id}`);
@@ -132,14 +137,17 @@ class Tama extends Base {
             this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.GET_SETTING(type, id)}`, 'get', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
-                        reject(new this.Error(res));
+                        reject(new this.Error(res, _stackTrace));
                     } else {
                         res.data.cached = false;
+                        if (options.useCache) {
+                            this.settingsCache.set(`${res.data.setting.type}/${res.data.setting.id}`, res.data);
+                        }
                         resolve(res.data);
                     }
                 })
                 .catch(err => {
-                    reject(new this.Error(err));
+                    reject(new this.Error(err, _stackTrace));
                 });
         });
     }
@@ -156,16 +164,21 @@ class Tama extends Base {
      * @returns {Promise<any>} The parsed response object, refer to https://docs.weeb.sh/#create-update-setting for its structure
      */
     createSetting(createOptions, options = {}) {
+
+        //Capture the stacktrace before it gets destroyed by the async operation
+        let _stackTrace = {};
+        Error.captureStackTrace(_stackTrace);
+
         return new Promise(async(resolve, reject) => {
             options = Object.assign({...this.options }, options);
             if (typeof createOptions.type !== 'string' || (typeof createOptions.id !== 'string' && typeof createOptions.id !== 'number') || !createOptions.data) {
-                return reject(new this.Error('The createOptions.type, createOptions.id and createOptions.data parameters are mandatory'));
+                return reject(new this.Error('The createOptions.type, createOptions.id and createOptions.data parameters are mandatory', _stackTrace));
             }
             options.data = createOptions.data;
             this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.CREATE_OR_UPDATE_SETTING(createOptions.type, createOptions.id)}`, 'post', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
-                        reject(new this.Error(res));
+                        reject(new this.Error(res, _stackTrace));
                     } else {
                         if (options.useCache) {
                             this.settingsCache.set(`${res.data.setting.type}/${res.data.setting.id}`, res.data);
@@ -174,7 +187,7 @@ class Tama extends Base {
                     }
                 })
                 .catch(err => {
-                    reject(new this.Error(err));
+                    reject(new this.Error(err, _stackTrace));
                 });
         });
     }
@@ -191,16 +204,21 @@ class Tama extends Base {
      * @returns {Promise<any>} The parsed response object, refer to https://docs.weeb.sh/#create-update-setting for its structure
      */
     updateSetting(updateOptions, options = {}) {
+
+        //Capture the stacktrace before it gets destroyed by the async operation
+        let _stackTrace = {};
+        Error.captureStackTrace(_stackTrace);
+
         return new Promise(async(resolve, reject) => {
             options = Object.assign({...this.options }, options);
             if (typeof updateOptions.type !== 'string' || (typeof updateOptions.id !== 'string' && typeof updateOptions.id !== 'number') || !updateOptions.data) {
-                return reject(new this.Error('The updateOptions.type, updateOptions.id and updateOptions.data parameters are mandatory'));
+                return reject(new this.Error('The updateOptions.type, updateOptions.id and updateOptions.data parameters are mandatory', _stackTrace));
             }
             options.data = updateOptions.data;
             this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.CREATE_OR_UPDATE_SETTING(updateOptions.type, updateOptions.id)}`, 'post', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
-                        reject(new this.Error(res));
+                        reject(new this.Error(res, _stackTrace));
                     } else {
                         if (options.useCache) {
                             this.settingsCache.set(`${res.data.setting.type}/${res.data.setting.id}`, res.data);
@@ -209,7 +227,7 @@ class Tama extends Base {
                     }
                 })
                 .catch(err => {
-                    reject(new this.Error(err));
+                    reject(new this.Error(err, _stackTrace));
                 });
         });
     }
@@ -227,15 +245,20 @@ class Tama extends Base {
      * @returns {Promise<any>} The parsed response object, refer to https://docs.weeb.sh/#delete-setting for its structure
      */
     deleteSetting(type, id, options = {}) {
+
+        //Capture the stacktrace before it gets destroyed by the async operation
+        let _stackTrace = {};
+        Error.captureStackTrace(_stackTrace);
+
         return new Promise(async(resolve, reject) => {
             options = Object.assign({...this.options }, options);
             if (typeof type !== 'string' || (typeof id !== 'string' && typeof id !== 'number')) {
-                return reject(new this.Error('The type and id parameters are mandatory'));
+                return reject(new this.Error('The type and id parameters are mandatory', _stackTrace));
             }
             this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.DELETE_SETTING(type, id)}`, 'delete', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
-                        reject(new this.Error(res));
+                        reject(new this.Error(res, _stackTrace));
                     } else {
                         if (options.useCache) {
                             this.settingsCache.delete(`${type}/${id}`);
@@ -244,7 +267,7 @@ class Tama extends Base {
                     }
                 })
                 .catch(err => {
-                    reject(new this.Error(err));
+                    reject(new this.Error(err, _stackTrace));
                 });
         });
     }
@@ -261,21 +284,26 @@ class Tama extends Base {
      * @returns {Promise<any>} The parsed response object, refer to https://docs.weeb.sh/#list-sub-settings for its structure
      */
     listSubSettings(listOptions, options = {}) {
+
+        //Capture the stacktrace before it gets destroyed by the async operation
+        let _stackTrace = {};
+        Error.captureStackTrace(_stackTrace);
+
         return new Promise(async(resolve, reject) => {
             options = Object.assign({...this.options }, options);
             if (typeof listOptions.type !== 'string' || (typeof listOptions.id !== 'string' && typeof listOptions.id !== 'number') || typeof listOptions.subType !== 'string') {
-                return reject(new this.Error('The listOptions.type, listOptions.id and listOptions.subType parameters are mandatory'));
+                return reject(new this.Error('The listOptions.type, listOptions.id and listOptions.subType parameters are mandatory', _stackTrace));
             }
             this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.LIST_SUBSETTINGS(listOptions.type, listOptions.id, listOptions.subType)}`, 'get', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
-                        reject(new this.Error(res));
+                        reject(new this.Error(res, _stackTrace));
                     } else {
                         resolve(res.data);
                     }
                 })
                 .catch(err => {
-                    reject(new this.Error(err));
+                    reject(new this.Error(err, _stackTrace));
                 });
         });
     }
@@ -292,10 +320,15 @@ class Tama extends Base {
      * @returns {Promise<any>} The parsed response object, along with a `cached` property representing whether the returned sub-setting is from the cache, refer to https://docs.weeb.sh/#get-sub-settings for its structure
      */
     getSubSetting(getSubSettingOptions, options = {}) {
+
+        //Capture the stacktrace before it gets destroyed by the async operation
+        let _stackTrace = {};
+        Error.captureStackTrace(_stackTrace);
+
         return new Promise(async(resolve, reject) => {
             options = Object.assign({...this.options }, options);
             if (typeof getSubSettingOptions.type !== 'string' || (typeof getSubSettingOptions.id !== 'string' && typeof getSubSettingOptions.id !== 'number') || typeof getSubSettingOptions.subType !== 'string' || (typeof getSubSettingOptions.subId !== 'string' && typeof getSubSettingOptions.subId !== 'number')) {
-                return reject(new this.Error('The getSubSettingOptions.type, getSubSettingOptions.id, getSubSettingOptions.subType and getSubSettingOptions.subId parameters are mandatory'));
+                return reject(new this.Error('The getSubSettingOptions.type, getSubSettingOptions.id, getSubSettingOptions.subType and getSubSettingOptions.subId parameters are mandatory', _stackTrace));
             }
             if (options.useCache) {
                 const subSetting = this.subSettingsCache.get(`${getSubSettingOptions.type}/${getSubSettingOptions.id}/${getSubSettingOptions.subType}/${getSubSettingOptions.subId}`);
@@ -307,14 +340,18 @@ class Tama extends Base {
             this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.GET_SUBSETTING(getSubSettingOptions.type, getSubSettingOptions.id, getSubSettingOptions.subType, getSubSettingOptions.subId)}`, 'get', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
-                        reject(new this.Error(res));
+                        reject(new this.Error(res, _stackTrace));
                     } else {
                         res.data.cached = false;
+                        if (options.useCache) {
+                            const key = `${createOptions.type}/${createOptions.id}/${createOptions.subType}/${createOptions.subId}`;
+                            this.subSettingsCache.set(key, { key: key, data: res.data });
+                        }
                         resolve(res.data);
                     }
                 })
                 .catch(err => {
-                    reject(new this.Error(err));
+                    reject(new this.Error(err, _stackTrace));
                 });
         });
     }
@@ -331,16 +368,21 @@ class Tama extends Base {
      * @returns {Promise<any>} The parsed response object, refer to https://docs.weeb.sh/#create-update-sub-setting for its structure
      */
     createSubSetting(createOptions, options = {}) {
+
+        //Capture the stacktrace before it gets destroyed by the async operation
+        let _stackTrace = {};
+        Error.captureStackTrace(_stackTrace);
+
         return new Promise(async(resolve, reject) => {
             options = Object.assign({...this.options }, options);
             if (typeof createOptions.type !== 'string' || (typeof createOptions.id !== 'string' && typeof createOptions.id !== 'number') || typeof createOptions.subType !== 'string' || (typeof createOptions.subId !== 'string' && typeof createOptions.subId !== 'number') || !createOptions.data) {
-                return reject(new this.Error('The createOptions.type, createOptions.id, createOptions.subType, createOptions.subId and createOptions.data parameters are mandatory'));
+                return reject(new this.Error('The createOptions.type, createOptions.id, createOptions.subType, createOptions.subId and createOptions.data parameters are mandatory', _stackTrace));
             }
             options.data = createOptions.data;
             this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.CREATE_OR_UPDATE_SUBSETTING(createOptions.type, createOptions.id, createOptions.subType, createOptions.subId)}`, 'post', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
-                        reject(new this.Error(res));
+                        reject(new this.Error(res, _stackTrace));
                     } else {
                         if (options.useCache) {
                             const key = `${createOptions.type}/${createOptions.id}/${createOptions.subType}/${createOptions.subId}`;
@@ -350,7 +392,7 @@ class Tama extends Base {
                     }
                 })
                 .catch(err => {
-                    reject(new this.Error(err));
+                    reject(new this.Error(err, _stackTrace));
                 });
         });
     }
@@ -367,16 +409,21 @@ class Tama extends Base {
      * @returns {Promise<any>} The parsed response object, refer to https://docs.weeb.sh/#create-update-sub-setting for its structure
      */
     updateSubSetting(updateOptions, options = {}) {
+
+        //Capture the stacktrace before it gets destroyed by the async operation
+        let _stackTrace = {};
+        Error.captureStackTrace(_stackTrace);
+
         return new Promise(async(resolve, reject) => {
             options = Object.assign({...this.options }, options);
             if (typeof updateOptions.type !== 'string' || (typeof updateOptions.id !== 'string' && typeof updateOptions.id !== 'number') || typeof updateOptions.subType !== 'string' || (typeof updateOptions.subId !== 'string' && typeof updateOptions.subId !== 'number') || !updateOptions.data) {
-                return reject(new this.Error('The updateOptions.type, updateOptions.id, updateOptions.subType, updateOptions.subId and updateOptions.data parameters are mandatory'));
+                return reject(new this.Error('The updateOptions.type, updateOptions.id, updateOptions.subType, updateOptions.subId and updateOptions.data parameters are mandatory', _stackTrace));
             }
             options.data = updateOptions.data;
             this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.CREATE_OR_UPDATE_SUBSETTING(updateOptions.type, updateOptions.id, updateOptions.subType, updateOptions.subId)}`, 'post', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
-                        reject(new this.Error(res));
+                        reject(new this.Error(res, _stackTrace));
                     } else {
                         if (options.useCache) {
                             const key = `${updateOptions.type}/${updateOptions.id}/${updateOptions.subType}/${updateOptions.subId}`;
@@ -386,7 +433,7 @@ class Tama extends Base {
                     }
                 })
                 .catch(err => {
-                    reject(new this.Error(err));
+                    reject(new this.Error(err, _stackTrace));
                 });
         });
     }
@@ -403,15 +450,20 @@ class Tama extends Base {
      * @returns {Promise<any>} The parsed response object, refer to https://docs.weeb.sh/#delete-sub-setting for its structure
      */
     deleteSubSetting(deleteOptions, options = {}) {
+
+        //Capture the stacktrace before it gets destroyed by the async operation
+        let _stackTrace = {};
+        Error.captureStackTrace(_stackTrace);
+
         return new Promise(async(resolve, reject) => {
             options = Object.assign({...this.options }, options);
             if (typeof deleteOptions.type !== 'string' || (typeof deleteOptions.id !== 'string' && typeof deleteOptions.id !== 'number') || typeof deleteOptions.subType !== 'string' || (typeof deleteOptions.subId !== 'string' && typeof deleteOptions.subId !== 'number') || !deleteOptions.data) {
-                return reject(new this.Error('The deleteOptions.type, deleteOptions.id, deleteOptions.subType, deleteOptions.subId and deleteOptions.data parameters are mandatory'));
+                return reject(new this.Error('The deleteOptions.type, deleteOptions.id, deleteOptions.subType, deleteOptions.subId and deleteOptions.data parameters are mandatory', _stackTrace));
             }
             this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.DELETE_SUBSETTING(deleteOptions.type, deleteOptions.id, deleteOptions.subType, deleteOptions.subId)}`, 'delete', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
-                        reject(new this.Error(res));
+                        reject(new this.Error(res, _stackTrace));
                     } else {
                         if (options.useCache) {
                             const key = `${deleteOptions.type}/${deleteOptions.id}/${deleteOptions.subType}/${deleteOptions.subId}`;
@@ -421,7 +473,7 @@ class Tama extends Base {
                     }
                 })
                 .catch(err => {
-                    reject(new this.Error(err));
+                    reject(new this.Error(err, _stackTrace));
                 });
         });
     }

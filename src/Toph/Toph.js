@@ -91,10 +91,15 @@ class Toph extends Base {
      * @memberof Toph
      */
     uploadImage(uploadOptions = {}, options = {}) {
+
+        //Capture the stacktrace before it gets destroyed by the async operation
+        let _stackTrace = {};
+        Error.captureStackTrace(_stackTrace);
+
         return new Promise(async(resolve, reject) => {
             options = Object.assign({...this.options }, options);
             if ((typeof uploadOptions.file !== 'string' && typeof uploadOptions.url !== 'string') || typeof uploadOptions.baseType !== 'string') {
-                return reject(new this.Error('At least either the uploadOptions.file or the uploadOptions.url and the uploadOptions.baseType parameters are required'));
+                return reject(new this.Error('At least either the uploadOptions.file or the uploadOptions.url and the uploadOptions.baseType parameters are required', _stackTrace));
             }
             if (uploadOptions.file) {
                 await this._readFileAsync(uploadOptions.file)
@@ -107,20 +112,20 @@ class Toph extends Base {
                         }
                     })
                     .catch(err => {
-                        return reject(new this.Error(err));
+                        return reject(new this.Error(err, _stackTrace));
                     });
             }
             options.data = uploadOptions;
             this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.UPLOAD_IMAGE}`, 'post', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
-                        reject(new this.Error(res));
+                        reject(new this.Error(res, _stackTrace));
                     } else {
                         resolve(res.data);
                     }
                 })
                 .catch(err => {
-                    reject(new this.Error(err));
+                    reject(new this.Error(err, _stackTrace));
                 });
         })
     }
@@ -138,10 +143,15 @@ class Toph extends Base {
      * @returns {Promise<any>} The parsed image object, refer to https://docs.weeb.sh/#random-image for its structure
      */
     getRandomImage(type, options = {}) {
+
+        //Capture the stacktrace before it gets destroyed by the async operation
+        let _stackTrace = {};
+        Error.captureStackTrace(_stackTrace);
+
         return new Promise(async(resolve, reject) => {
             options = Object.assign({...this.options }, options);
             if (!type && !options.tags) {
-                return Promise.reject(new this.Error('Either the type or tags parameter is mandatory'));
+                return Promise.reject(new this.Error('Either the type or tags parameter is mandatory', _stackTrace));
             }
             if (options.tags) {
                 options.tags = options.tags.replace(/\s+/gi, '');
@@ -150,13 +160,13 @@ class Toph extends Base {
             this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.GET_RANDOM_IMAGE}`, 'get', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
-                        reject(new this.Error(res));
+                        reject(new this.Error(res, _stackTrace));
                     } else {
                         resolve(res.data);
                     }
                 })
                 .catch(err => {
-                    reject(new this.Error(err));
+                    reject(new this.Error(err, _stackTrace));
                 });
         });
     }
@@ -173,19 +183,24 @@ class Toph extends Base {
      * @memberof Toph
      */
     getImageTypes(options = {}) {
+
+        //Capture the stacktrace before it gets destroyed by the async operation
+        let _stackTrace = {};
+        Error.captureStackTrace(_stackTrace);
+
         return new Promise(async(resolve, reject) => {
             options = Object.assign({...this.options }, options);
             options.params = this.addURLParams({}, ['nsfw', 'hidden', 'preview'], options);
             this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.GET_IMAGE_TYPES}`, 'get', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
-                        reject(new this.Error(res));
+                        reject(new this.Error(res, _stackTrace));
                     } else {
                         return resolve(res.data);
                     }
                 })
                 .catch(err => {
-                    reject(new this.Error(err));
+                    reject(new this.Error(err, _stackTrace));
                 });
         })
     }
@@ -202,19 +217,24 @@ class Toph extends Base {
      * @memberof Toph
      */
     getImageTags(options = {}) {
+
+        //Capture the stacktrace before it gets destroyed by the async operation
+        let _stackTrace = {};
+        Error.captureStackTrace(_stackTrace);
+
         return new Promise(async(resolve, reject) => {
             options = Object.assign({...this.options }, options);
             options.params = this.addURLParams({}, ['hidden', 'nsfw'], options);
             this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.GET_IMAGE_TAGS}`, 'get', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
-                        reject(new this.Error(res));
+                        reject(new this.Error(res, _stackTrace));
                     } else {
                         return resolve(res.data);
                     }
                 })
                 .catch(err => {
-                    reject(new this.Error(err));
+                    reject(new this.Error(err, _stackTrace));
                 });
         })
     }
@@ -232,21 +252,26 @@ class Toph extends Base {
      * @memberof Toph
      */
     getImageInfo(id, options = {}) {
+
+        //Capture the stacktrace before it gets destroyed by the async operation
+        let _stackTrace = {};
+        Error.captureStackTrace(_stackTrace);
+
         return new Promise(async(resolve, reject) => {
             if (!id) {
-                return reject(new this.Error('The ID is mandatory'));
+                return reject(new this.Error('The ID is mandatory', _stackTrace));
             }
             options = Object.assign({...this.options }, options);
             this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.GET_IMAGE_INFO(id)}`, 'get', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
-                        reject(new this.Error(res));
+                        reject(new this.Error(res, _stackTrace));
                     } else {
                         return resolve(res.data);
                     }
                 })
                 .catch(err => {
-                    reject(new this.Error(err));
+                    reject(new this.Error(err, _stackTrace));
                 });
         });
     }
@@ -265,11 +290,16 @@ class Toph extends Base {
      * @memberof Toph
      */
     addTagsToImage(id, tags, options = {}) {
+
+        //Capture the stacktrace before it gets destroyed by the async operation
+        let _stackTrace = {};
+        Error.captureStackTrace(_stackTrace);
+
         return new Promise(async(resolve, reject) => {
             if (!id) {
-                return reject('The image ID is mandatory');
+                return reject(new this.Error('The image ID is mandatory', _stackTrace));
             } else if (!tags || !Array.isArray(tags)) {
-                return reject('The tags to add must be an array of strings');
+                return reject(new this.Error('The tags to add must be an array of strings', _stackTrace));
             }
             options = Object.assign({...this.options }, options);
             options.data = {
@@ -278,13 +308,13 @@ class Toph extends Base {
             this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.ADD_TAGS_TO_IMAGE(id)}`, 'post', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
-                        reject(new this.Error(res));
+                        reject(new this.Error(res, _stackTrace));
                     } else {
                         return resolve(res.data);
                     }
                 })
                 .catch(err => {
-                    reject(new this.Error(err));
+                    reject(new this.Error(err, _stackTrace));
                 });
         })
     }
@@ -296,18 +326,23 @@ class Toph extends Base {
      * @param {array} tags - An array of tags, either strings or {name: 'tag_name'} objects 
      * @param {TophOptions} [options={}]
      * @example 
-     * weebSH.toph.removeTagsFromImage('6d875e')
+     * weebSH.toph.removeTagsFromImage('6d875e', ['baguette'])
      * .then(console.log)
      * .catch(console.error)
      * @returns {Promise<any>} 
      * @memberof Toph
      */
     removeTagsFromImage(id, tags, options = {}) {
+
+        //Capture the stacktrace before it gets destroyed by the async operation
+        let _stackTrace = {};
+        Error.captureStackTrace(_stackTrace);
+
         return new Promise(async(resolve, reject) => {
             if (!id) {
-                return reject('The image ID is mandatory');
+                return reject(new this.Error('The image ID is mandatory', _stackTrace));
             } else if (!tags || !Array.isArray(tags)) {
-                return reject('The tags to add must be an array of strings');
+                return reject(new this.Error('The tags to add must be an array of strings', _stackTrace));
             }
             options = Object.assign({...this.options }, options);
             options.data = {
@@ -316,13 +351,13 @@ class Toph extends Base {
             this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.REMOVE_TAGS_FROM_IMAGE(id)}`, 'delete', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
-                        reject(new this.Error(res));
+                        reject(new this.Error(res, _stackTrace));
                     } else {
                         return resolve(res.data);
                     }
                 })
                 .catch(err => {
-                    reject(new this.Error(err));
+                    reject(new this.Error(err, _stackTrace));
                 });
         })
     }
@@ -340,21 +375,26 @@ class Toph extends Base {
      * @memberof Toph
      */
     deleteImage(id, options = {}) {
+
+        //Capture the stacktrace before it gets destroyed by the async operation
+        let _stackTrace = {};
+        Error.captureStackTrace(_stackTrace);
+
         return new Promise(async(resolve, reject) => {
             if (!id) {
-                return reject('The image ID is mandatory');
+                return reject(new this.Error('The image ID is mandatory', _stackTrace));
             }
             options = Object.assign({...this.options }, options);
             this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.DELETE_IMAGE(id)}`, 'delete', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
-                        reject(new this.Error(res));
+                        reject(new this.Error(res, _stackTrace));
                     } else {
                         return resolve(res.data);
                     }
                 })
                 .catch(err => {
-                    reject(new this.Error(err));
+                    reject(new this.Error(err, _stackTrace));
                 });
         })
     }

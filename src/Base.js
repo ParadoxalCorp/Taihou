@@ -38,6 +38,9 @@ class Base {
                 data: ['post', 'put', 'patch'].includes(method) ? options.data : undefined,
                 headers: options.headers ? { 'User-Agent': options.userAgent, ...options.headers } : { 'User-Agent': options.userAgent },
                 params: options.params
+            };
+            if (options.axios) {
+                Object.assign(config, options.axios);
             }
             return this.axios[method](url, ['post', 'put', 'patch'].includes(method) ? null : config, ['post', 'put', 'patch'].includes(method) ? config : null);
         }

@@ -83,25 +83,33 @@ class Korra extends Base {
      * weebSH.korra.generateSimple('awooo')
      * .then(console.log)
      * .catch(console.error)
-     * @returns {Promise<any>} The image buffer
+     * @returns {Promise<Buffer>} The image buffer, that you can directly pass to d.js/eris
      */
     generateSimple(type, simpleOptions = {}, options = {}) {
+
+        //Capture the stacktrace before it gets destroyed by the async operation
+        let _stackTrace = {};
+        Error.captureStackTrace(_stackTrace);
+
         return new Promise(async(resolve, reject) => {
             if (typeof type !== 'string') {
-                return reject(new this.Error('The type parameter is mandatory'));
+                return reject(new this.Error('The type parameter is mandatory', _stackTrace));
             }
             options = Object.assign({...this.options }, options);
             options.params = this.addURLParams({ type: type }, simpleOptions, options);
+            options.axios = {
+                responseType: 'arraybuffer'
+            };
             this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.GENERATE_SIMPLE}`, 'get', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
-                        reject(new this.Error(res));
+                        reject(new this.Error(res, _stackTrace));
                     } else {
                         resolve(res.data);
                     }
                 })
                 .catch(err => {
-                    reject(new this.Error(err));
+                    reject(new this.Error(err, _stackTrace));
                 });
         });
     }
@@ -115,25 +123,33 @@ class Korra extends Base {
      * weebSH.korra.generateDiscordStatus('online', 'https://cdn.discordapp.com/avatars/140149699486154753/a_211d333073a63b3adfd13943268fc7a1.webp?size=1024')
      * .then(console.log)
      * .catch(console.error)
-     * @returns {Promise<any>} The image buffer
+     * @returns {Promise<Buffer>} The image buffer, that you can directly pass to d.js/eris
      */
     generateDiscordStatus(status, avatar, options = {}) {
+
+        //Capture the stacktrace before it gets destroyed by the async operation
+        let _stackTrace = {};
+        Error.captureStackTrace(_stackTrace);
+
         return new Promise(async(resolve, reject) => {
             if (typeof status !== 'string' || typeof avatar !== 'string') {
-                return reject(new this.Error('Both the status and avatar parameters are required'));
+                return reject(new this.Error('Both the status and avatar parameters are required', _stackTrace));
             }
             options = Object.assign({...this.options }, options);
             options.params = this.addURLParams({ status: status, avatar: encodeURIComponent(avatar) }, [], options);
+            options.axios = {
+                responseType: 'arraybuffer'
+            };
             this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.GENERATE_DISCORD_STATUS}`, 'get', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
-                        reject(new this.Error(res));
+                        reject(new this.Error(res, _stackTrace));
                     } else {
                         resolve(res.data);
                     }
                 })
                 .catch(err => {
-                    reject(new this.Error(err));
+                    reject(new this.Error(err, _stackTrace));
                 });
         })
     }
@@ -146,27 +162,35 @@ class Korra extends Base {
      * weebSH.korra.generateWaifuInsult('https://cdn.discordapp.com/avatars/140149699486154753/a_211d333073a63b3adfd13943268fc7a1.webp?size=1024')
      * .then(console.log)
      * .catch(console.error)
-     * @returns {Promise<any>} The image buffer
+     * @returns {Promise<Buffer>} The image buffer, that you can directly pass to d.js/eris
      */
     generateWaifuInsult(avatar, options = {}) {
+
+        //Capture the stacktrace before it gets destroyed by the async operation
+        let _stackTrace = {};
+        Error.captureStackTrace(_stackTrace);
+
         return new Promise(async(resolve, reject) => {
             if (typeof avatar !== 'string') {
-                return reject(new this.Error('The avatar parameter is required'));
+                return reject(new this.Error('The avatar parameter is required', _stackTrace));
             }
             options = Object.assign({...this.options }, options);
             options.data = {
                 "avatar": avatar
             }
+            options.axios = {
+                responseType: 'arraybuffer'
+            };
             this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.GENERATE_WAIFU_INSULT}`, 'post', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
-                        reject(new this.Error(res));
+                        reject(new this.Error(res, _stackTrace));
                     } else {
                         resolve(res.data);
                     }
                 })
                 .catch(err => {
-                    reject(new this.Error(err));
+                    reject(new this.Error(err, _stackTrace));
                 });
         })
     }
@@ -180,28 +204,36 @@ class Korra extends Base {
      * weebSH.korra.generateLoveShip('https://cdn.discordapp.com/avatars/128392910574977024/174c3436af3e4857accb4a32e2f9f220.webp?size=1024', 'https://cdn.discordapp.com/avatars/108638204629925888/e05fb8c7720c3618569828246e176fb4.webp?size=1024')
      * .then(console.log)
      * .catch(console.error)     
-     * @returns {Promise<any>} The image buffer
+     * @returns {Promise<Buffer>} The image buffer, that you can directly pass to d.js/eris
      */
     generateLoveShip(firstTarget, secondTarget, options = {}) {
+
+        //Capture the stacktrace before it gets destroyed by the async operation
+        let _stackTrace = {};
+        Error.captureStackTrace(_stackTrace);
+
         return new Promise(async(resolve, reject) => {
             if (typeof firstTarget !== 'string' || typeof secondTarget !== 'string') {
-                return reject(new this.Error('Both the firstTarget and secondTarget parameters are required'));
+                return reject(new this.Error('Both the firstTarget and secondTarget parameters are required', _stackTrace));
             }
             options = Object.assign({...this.options }, options);
             options.data = {
                 targetOne: firstTarget,
                 targetTwo: secondTarget
             }
+            options.axios = {
+                responseType: 'arraybuffer'
+            };
             this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.GENERATE_LOVE_SHIP}`, 'post', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
-                        reject(new this.Error(res));
+                        reject(new this.Error(res, _stackTrace));
                     } else {
                         resolve(res.data);
                     }
                 })
                 .catch(err => {
-                    reject(new this.Error(err));
+                    reject(new this.Error(err, _stackTrace));
                 });
         });
     }
@@ -214,25 +246,33 @@ class Korra extends Base {
      * weebSH.korra.generateLicense({title: 'Baguette License', avatar: 'https://cdn.discordapp.com/avatars/128392910574977024/174c3436af3e4857accb4a32e2f9f220.webp?size=1024'})
      * .then(console.log)
      * .catch(console.error)     
-     * @returns {Promise<any>} The image buffer
+     * @returns {Promise<Buffer>} The image buffer, that you can directly pass to d.js/eris
      */
     generateLicense(licenseOptions, options) {
+
+        //Capture the stacktrace before it gets destroyed by the async operation
+        let _stackTrace = {};
+        Error.captureStackTrace(_stackTrace);
+
         return new Promise(async(resolve, reject) => {
             if (typeof licenseOptions !== 'object') {
-                return reject(new this.Error('The licenseOptions parameter is required'));
+                return reject(new this.Error('The licenseOptions parameter is required', _stackTrace));
             }
             options = Object.assign({...this.options }, options);
             options.data = licenseOptions;
+            options.axios = {
+                responseType: 'arraybuffer'
+            };
             this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.GENERATE_LICENSE}`, 'post', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
-                        reject(new this.Error(res));
+                        reject(new this.Error(res, _stackTrace));
                     } else {
                         resolve(res.data);
                     }
                 })
                 .catch(err => {
-                    reject(new this.Error(err));
+                    reject(new this.Error(err, _stackTrace));
                 });
         });
     }
