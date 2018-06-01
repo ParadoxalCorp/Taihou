@@ -57,13 +57,13 @@ const weebSH = new Taihou('token', true, {
 
 weebSH.toph.getRandomImage('pat')
     .then(image => console.log(image.url))
-    .catch(err => `Oopsie, an error occurred: ${err}`);
+    .catch(err => console.error(`Oopsie, an error occurred: ${err}`));
 
 //You can also access the classes with their english name description, like
 
 weebSH.images.getRandomImage('pat')
     .then(image => console.log(image.url))
-    .catch(err => `Oopsie, an error occurred: ${err}`);
+    .catch(err => console.error(`Oopsie, an error occurred: ${err}`));
 
 //Which is exactly the same
 ```
@@ -82,7 +82,7 @@ const weebSH = new Taihou('token', true, {
     baseURL: 'https://api.weeb.sh'
     toph: {
         timeout: 5000 //Set 5000ms instead of 15000 for all toph methods,
-        baseURL: 'https://staging.weeb.sh' //You can use a different environnement for a specific service, and even for a specific request 
+        baseURL: 'https://staging.weeb.sh' //You can use a different environment for a specific service, and even for a specific request 
     },
     images: {
         timeout: 5000 //If you don't want to use the name "toph", it can be done with "images" too
@@ -91,7 +91,7 @@ const weebSH = new Taihou('token', true, {
 
 weebSH.toph.getRandomImage('pat', {timeout: 3000}) //Set 3000ms instead of 5000 for this specific request
     .then(image => console.log(image.url))
-    .catch(err => `Oopsie, an error occurred: ${err}`);
+    .catch(err => console.error(`Oopsie, an error occurred: ${err}`));
 ```
 
 ### Sending generated images to Discord
@@ -103,20 +103,20 @@ show how to do it in the most probable context (when a command is called)
 
 ```js
 weebSH.korra.generateWaifuInsult('https://cdn.discordapp.com/attachments/397069608043020298/452094168890867722/memesie.png') 
-    .then(image => {
+    .then(buffer => {
         message.channel.createMessage('', {file: buffer, name: `${Date.now()}-${message.author.id}.png`})
     })
-    .catch(err => `Oopsie, an error occurred: ${err}`);
+    .catch(err => console.error(`Oopsie, an error occurred: ${err}`));
 ```
 
 #### With Discord.js
 
 ```js
 weebSH.korra.generateWaifuInsult('https://cdn.discordapp.com/attachments/397069608043020298/452094168890867722/memesie.png') 
-    .then(image => {
+    .then(buffer => {
         message.channel.send('', {files: [{attachment: buffer, name: `${Date.now()}-${message.author.id}.png`]})
     })
-    .catch(err => `Oopsie, an error occurred: ${err}`);
+    .catch(err => console.error(`Oopsie, an error occurred: ${err}`));
 ```
 
 ## Documentation
