@@ -87,7 +87,7 @@ class Shimakaze extends Base {
      * @returns {boolean} Whether or not Shimakaze is online 
      */
     async getStatus(options = {}) {
-        return new Promise(async(resolve, reject) => {
+        return new Promise(async(resolve) => {
             options = Object.assign({...this.options }, options);
             this.status(`${options.baseURL}${constants.endpoints.GET_SHIMAKAZE_STATUS}`, options)
                 .then(res => {
@@ -104,7 +104,7 @@ class Shimakaze extends Base {
      * 
      * @param {string} botID - The ID of the bot reputation database to access
      * @param {string} targetID - The ID of the user to get reputation of
-     * @param {ShimakazeOptions} [options={}] 
+     * @param {ShimakazeOptions} [options={}] An additional object of options
      * @example 
      * weebSH.shimakaze.getUserReputation('327144735359762432', '184051394179891201')
      * .then(console.log)
@@ -144,7 +144,7 @@ class Shimakaze extends Base {
      * Give reputation to a user
      * 
      * @param {GiveReputationOptions} reputationOptions An object of options
-     * @param {ShimakazeOptions} [options={}]
+     * @param {ShimakazeOptions} [options={}] An additional object of options
      * @example 
      * weebSH.shimakaze.postUserReputation({botID: '184051394179891201', targetID: '128392910574977024', sourceID: '140149699486154753'})
      * .then(console.log)
@@ -186,7 +186,7 @@ class Shimakaze extends Base {
      * Reset the reputation of a user
      * 
      * @param {ResetUserReputationOptions} resetOptions An object of options
-     * @param {ShimakazeOptions} [options={}] 
+     * @param {ShimakazeOptions} [options={}] An additional object of options
      * @example 
      * weebSH.shimakaze.resetUserReputation({botID: '327144735359762432', targetID: '184051394179891201'})
      * .then(console.log)
@@ -228,7 +228,7 @@ class Shimakaze extends Base {
      * Increase the reputation of a user
      * 
      * @param {IncreaseUserReputationOptions} increaseOptions An object of options
-     * @param {ShimakazeOptions} [options={}] 
+     * @param {ShimakazeOptions} [options={}] An additional object of options
      * @example 
      * weebSH.shimakaze.increaseUserReputation({botID: '327144735359762432', targetID: '184051394179891201', increase: 1})
      * .then(console.log)
@@ -270,7 +270,7 @@ class Shimakaze extends Base {
      * Decrease the reputation of a user
      * 
      * @param {DecreaseUserReputationOptions} decreaseOptions An object of options
-     * @param {ShimakazeOptions} [options={}] 
+     * @param {ShimakazeOptions} [options={}] An additional object of options
      * @example 
      * weebSH.shimakaze.decreaseUserReputation({botID: '327144735359762432', targetID: '184051394179891201', decrease: 1})
      * .then(console.log)
@@ -311,7 +311,7 @@ class Shimakaze extends Base {
     /**
      * Get the current settings
      * 
-     * @param {ShimakazeOptions} [options={}] 
+     * @param {ShimakazeOptions} [options={}] An additional object of options
      * @example 
      * weebSH.shimakaze.getSettings()
      * .then(console.log)
@@ -344,7 +344,7 @@ class Shimakaze extends Base {
      * Update the current settings
      * 
      * @param {ReputationSettings} settings - The settings to update
-     * @param {ShimakazeOptions} [options={}] 
+     * @param {ShimakazeOptions} [options={}] An additional object of options
      * @example 
      * weebSH.shimakaze.setSettings({reputationPerDay: 3})
      * .then(console.log)

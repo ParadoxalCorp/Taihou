@@ -66,13 +66,13 @@ class Toph extends Base {
      * @returns {Promise<boolean>} Whether or not Toph is online 
      */
     getStatus(options = {}) {
-        return new Promise(async(resolve, reject) => {
+        return new Promise(async(resolve) => {
             options = Object.assign({...this.options }, options);
             this.status(`${options.baseURL}${constants.endpoints.GET_TOPH_STATUS}`, options)
                 .then(res => {
                     return resolve(res.request.res.statusCode === 200 ? true : false);
                 })
-                .catch((err) => {
+                .catch(() => {
                     return resolve(false);
                 });
         });
@@ -82,7 +82,7 @@ class Toph extends Base {
      * Upload an image to Toph
      * 
      * @param {UploadOptions} uploadOptions An object of options 
-     * @param {TophOptions} [options={}] 
+     * @param {TophOptions} [options={}] - An object of additional options
      * @example 
      * weebSH.toph.uploadImage({url: 'https://wew.png', type: 'wew', hidden: true, nsfw: false})
      * .then(console.log)
@@ -127,14 +127,14 @@ class Toph extends Base {
                 .catch(err => {
                     reject(new this.Error(err, _stackTrace));
                 });
-        })
+        });
     }
 
     /**
      * Get a random image from weeb.sh, you can specify both type and options.tags. You can also set the type to null and only specify options.tags
      * 
      * @param {string} type - The type, either this or options.tags is mandatory. To get a list of types, use getImageTypes, as well as getImageTags for a list of tags
-     * @param {TophOptions} [options={}] 
+     * @param {TophOptions} [options={}] - An object of additional options
      * @memberof Toph
      * @example 
      * weebSH.toph.getRandomImage('pat')
@@ -174,7 +174,7 @@ class Toph extends Base {
     /**
      * Get a list of image types and a preview image for each if you want
      * 
-     * @param {TophOptions} [options={}] 
+     * @param {TophOptions} [options={}] - An object of additional options
      * @returns {Promise<any>} The parsed response object that you can see here https://docs.weeb.sh/#image-types
      * @example
      * weebSH.toph.getImageTypes()
@@ -202,13 +202,13 @@ class Toph extends Base {
                 .catch(err => {
                     reject(new this.Error(err, _stackTrace));
                 });
-        })
+        });
     }
 
     /**
      * Get a list of image tags
      * 
-     * @param {TophOptions} [options={}] 
+     * @param {TophOptions} [options={}] - An object of additional options
      * @example 
      * weebSH.toph.getImageTags()
      * .then(console.log)
@@ -236,14 +236,14 @@ class Toph extends Base {
                 .catch(err => {
                     reject(new this.Error(err, _stackTrace));
                 });
-        })
+        });
     }
 
     /**
      * Get info about an image using its ID
      * 
      * @param {string} id - The ID of the image to get info from
-     * @param {TophOptions} [options={}] 
+     * @param {TophOptions} [options={}] - An object of additional options
      * @example 
      * weebSH.toph.getImageInfo('6d875e')
      * .then(console.log)
@@ -281,7 +281,7 @@ class Toph extends Base {
      * 
      * @param {string} id - The ID of the image to add tags to
      * @param {array} tags - An array of tags, either strings or {name: 'tag_name'} objects 
-     * @param {TophOptions} [options={}]
+     * @param {TophOptions} [options={}] - An object of additional options
      * @example 
      * weebSH.toph.addTagsToImage('6d875e', ['baguette'])
      * .then(console.log)
@@ -304,7 +304,7 @@ class Toph extends Base {
             options = Object.assign({...this.options }, options);
             options.data = {
                 tags: tags
-            }
+            };
             this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.ADD_TAGS_TO_IMAGE(id)}`, 'post', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
@@ -316,7 +316,7 @@ class Toph extends Base {
                 .catch(err => {
                     reject(new this.Error(err, _stackTrace));
                 });
-        })
+        });
     }
 
     /**
@@ -324,12 +324,12 @@ class Toph extends Base {
      * 
      * @param {string} id - The ID of the image to remove tags from
      * @param {array} tags - An array of tags, either strings or {name: 'tag_name'} objects 
-     * @param {TophOptions} [options={}]
+     * @param {TophOptions} [options={}] - An object of additional options
      * @example 
      * weebSH.toph.removeTagsFromImage('6d875e', ['baguette'])
      * .then(console.log)
      * .catch(console.error)
-     * @returns {Promise<any>} 
+     * @returns {Promise<any>} The returned data
      * @memberof Toph
      */
     removeTagsFromImage(id, tags, options = {}) {
@@ -347,7 +347,7 @@ class Toph extends Base {
             options = Object.assign({...this.options }, options);
             options.data = {
                 tags: tags
-            }
+            };
             this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.REMOVE_TAGS_FROM_IMAGE(id)}`, 'delete', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
@@ -359,14 +359,14 @@ class Toph extends Base {
                 .catch(err => {
                     reject(new this.Error(err, _stackTrace));
                 });
-        })
+        });
     }
 
     /**
      * Delete an image
      * 
      * @param {string} id - The ID of the image to remove tags from
-     * @param {TophOptions} [options={}]
+     * @param {TophOptions} [options={}] - An object of additional options
      * @example 
      * weebSH.toph.deleteImage('6d875e')
      * .then(console.log)
@@ -396,7 +396,7 @@ class Toph extends Base {
                 .catch(err => {
                     reject(new this.Error(err, _stackTrace));
                 });
-        })
+        });
     }
 }
 

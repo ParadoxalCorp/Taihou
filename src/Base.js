@@ -2,6 +2,7 @@
 
 const RequestHandler = require('./RequestHandler');
 const Error = require('./Error');
+const fs = require('fs');
 
 class Base {
     constructor(options) {
@@ -12,10 +13,11 @@ class Base {
     /**
      * 
      * 
-     * @param {any} url 
-     * @param {any} options 
+     * @param {any} url - The URL
+     * @param {any} options - The options
      * @memberof Base
      * @private
+     * @returns {void}
      */
     status(url, options) {
         return this.requestHandler.queueRequest(this.formatRequest(url, 'get', options), { beforeNextRequest: options.beforeNextRequest || 60 });
@@ -24,10 +26,10 @@ class Base {
     /**
      * 
      * 
-     * @param {any} url 
-     * @param {any} method 
-     * @param {any} options 
-     * @returns 
+     * @param {any} url - The URL
+     * @param {any} method - The method
+     * @param {any} options - The options
+     * @returns {function} - The function created to execute the request
      * @memberof Base
      * @private
      */
@@ -43,16 +45,16 @@ class Base {
                 Object.assign(config, options.axios);
             }
             return this.axios[method](url, ['post', 'put', 'patch'].includes(method) ? null : config, ['post', 'put', 'patch'].includes(method) ? config : null);
-        }
+        };
     }
 
     /**
      * 
      * 
-     * @param {any} baseParams 
-     * @param {any} paramsToAdd 
-     * @param {any} options 
-     * @returns 
+     * @param {any} baseParams - The base params
+     * @param {any} paramsToAdd - The params to add
+     * @param {any} options - The options
+     * @returns {object} - The baseParams object with the parameters added
      * @memberof Base
      * @private
      */
@@ -72,8 +74,8 @@ class Base {
     /**
      * 
      * 
-     * @param {string} path 
-     * @returns {Promise<any>}
+     * @param {string} path - The path
+     * @returns {Promise<any>} The file
      * @memberof Base
      */
     _readFileAsync(path) {

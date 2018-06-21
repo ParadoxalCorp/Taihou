@@ -92,7 +92,7 @@ class Tama extends Base {
      * @returns {boolean} Whether or not Tama is online 
      */
     async getStatus(options = {}) {
-        return new Promise(async(resolve, reject) => {
+        return new Promise(async(resolve) => {
             options = Object.assign({...this.options }, options);
             this.status(`${options.baseURL}${constants.endpoints.GET_TAMA_STATUS}`, options)
                 .then(res => {
@@ -109,7 +109,7 @@ class Tama extends Base {
      * 
      * @param {string} type - The type of the setting
      * @param {string|number} id - The ID of the setting
-     * @param {TamaOptions} [options={}] 
+     * @param {TamaOptions} [options={}] - An additional object of options
      * @example 
      * weebSH.tama.getSetting('guilds', '300407204987666432')
      * .then(console.log)
@@ -156,7 +156,7 @@ class Tama extends Base {
      * Create a new setting
      * Technically you can update an existing setting with this method too, the only reason there is two different methods is to be clearer
      * @param {CreateOrUpdateOptions} createOptions - An object of parameters
-     * @param {TamaOptions} [options={}] 
+     * @param {TamaOptions} [options={}] An additional object of options
      * @example 
      * weebSH.tama.createSetting({type: 'guilds', id: '300407204987666432', data: {prefix: 'poi', baguette: true}})
      * .then(console.log)
@@ -196,7 +196,7 @@ class Tama extends Base {
      * Update a setting
      * Technically you can create a setting with this method too, the only reason there is two different methods is to be clearer
      * @param {CreateOrUpdateOptions} updateOptions - An object of parameters 
-     * @param {TamaOptions} [options={}] 
+     * @param {TamaOptions} [options={}] An additional object of options
      * @example 
      * weebSH.tama.updateSetting({type: 'guilds', id: '300407204987666432', data: {prefix: 'poi', baguette: false}})
      * .then(console.log)
@@ -237,7 +237,7 @@ class Tama extends Base {
      * If options.useCache is true, the setting will also be deleted from the cache. Note that this however won't delete the subsettings
      * @param {string} type - The type of the setting
      * @param {string|number} id - The ID of the setting
-     * @param {TamaOptions} [options={}] 
+     * @param {TamaOptions} [options={}] An additional object of options
      * @example 
      * weebSH.tama.deleteSetting('guilds', '300407204987666432')
      * .then(console.log)
@@ -276,7 +276,7 @@ class Tama extends Base {
      * Get a list of sub-settings for a sub-setting type.
      * 
      * @param {listSubSettingsOptions} listOptions - An object of parameters
-     * @param {TamaOptions} [options={}] 
+     * @param {TamaOptions} [options={}] An additional object of options
      * @example 
      * weebSH.tama.listSubSettings({type: 'guilds', id: '300407204987666432', subType: 'channels'})
      * .then(console.log)
@@ -312,7 +312,7 @@ class Tama extends Base {
      * Get a sub-setting by type and id 
      * 
      * @param {GetSubSettingOptions} getSubSettingOptions - An object of parameters
-     * @param {TamaOptions} [options={}] 
+     * @param {TamaOptions} [options={}] An additional object of options
      * @example 
      * weebSH.tama.getSubSetting({type: 'guilds', id: '300407204987666432', subType: 'channels', subId: '439457506960605185'})
      * .then(console.log)
@@ -344,7 +344,7 @@ class Tama extends Base {
                     } else {
                         res.data.cached = false;
                         if (options.useCache) {
-                            const key = `${createOptions.type}/${createOptions.id}/${createOptions.subType}/${createOptions.subId}`;
+                            const key = `${getSubSettingOptions.type}/${getSubSettingOptions.id}/${getSubSettingOptions.subType}/${getSubSettingOptions.subId}`;
                             this.subSettingsCache.set(key, { key: key, data: res.data });
                         }
                         resolve(res.data);
@@ -360,7 +360,7 @@ class Tama extends Base {
      * Create a sub-setting
      * Technically this method can be used to update a sub-setting too, the only reason there is two different methods is to be clearer
      * @param {CreateOrUpdateSubSettingOptions} createOptions - An object of parameters
-     * @param {TamaOptions} [options={}] 
+     * @param {TamaOptions} [options={}] An additional object of options
      * @example 
      * weebSH.tama.createSubSetting({type: 'guilds', id: '300407204987666432', subType: 'channels', subId: '439457506960605185', data: {weeb: false}})
      * .then(console.log)
@@ -401,7 +401,7 @@ class Tama extends Base {
      * Update a sub-setting
      * Technically this method can be used to create a sub-setting too, the only reason there is two different methods is to be clearer
      * @param {CreateOrUpdateSubSettingOptions} updateOptions - An object of parameters
-     * @param {TamaOptions} [options={}] 
+     * @param {TamaOptions} [options={}] An additional object of options
      * @example 
      * weebSH.tama.createSubSetting({type: 'guilds', id: '300407204987666432', subType: 'channels', subId: '439457506960605185', data: {weeb: true}})
      * .then(console.log)
@@ -442,7 +442,7 @@ class Tama extends Base {
      * Delete a sub-setting
      * 
      * @param {DeleteSubSettingOptions} deleteOptions - An object of parameters
-     * @param {TamaOptions} [options={}] 
+     * @param {TamaOptions} [options={}] An additional object of options
      * @example 
      * weebSH.tama.deleteSubSetting({type: 'guilds', id: '300407204987666432', subType: 'channels', subId: '439457506960605185'})
      * .then(console.log)
