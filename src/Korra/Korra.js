@@ -62,13 +62,13 @@ class Korra extends Base {
      * @returns {Promise<boolean>} Whether or not Korra is online 
      */
     getStatus(options = {}) {
-        return new Promise(async(resolve, reject) => {
+        return new Promise(async(resolve) => {
             options = Object.assign({...this.options }, options);
             this.status(`${options.baseURL}${constants.endpoints.GET_KORRA_STATUS}`, options)
                 .then(res => {
                     return resolve(res.request.res.statusCode === 200 ? true : false);
                 })
-                .catch((err) => {
+                .catch(() => {
                     return resolve(false);
                 });
         });
@@ -78,7 +78,7 @@ class Korra extends Base {
      * 
      * @param {string} type One of the available types, you can see them here: https://docs.weeb.sh/#generate-simple
      * @param {SimpleOptions} [simpleOptions] An object of options for this generation, for a complete list of options you can use, check: https://docs.weeb.sh/#generate-simple
-     * @param {KorraOptions} [options={}] 
+     * @param {KorraOptions} [options={}] An additional object of options
      * @example
      * weebSH.korra.generateSimple('awooo')
      * .then(console.log)
@@ -118,7 +118,7 @@ class Korra extends Base {
      * 
      * @param {string} status - The status, can be either "online", "idle", "streaming", "dnd" or "offline"
      * @param {string} avatar - The direct URL to the image
-     * @param {KorraOptions} [options={}]  
+     * @param {KorraOptions} [options={}] An additional object of options
      * @example
      * weebSH.korra.generateDiscordStatus('online', 'https://cdn.discordapp.com/avatars/140149699486154753/a_211d333073a63b3adfd13943268fc7a1.webp?size=1024')
      * .then(console.log)
@@ -151,13 +151,13 @@ class Korra extends Base {
                 .catch(err => {
                     reject(new this.Error(err, _stackTrace));
                 });
-        })
+        });
     }
 
     /**
      * 
      * @param {string} avatar - The direct URL to the image
-     * @param {KorraOptions} [options={}]  
+     * @param {KorraOptions} [options={}] An additional object of options
      * @example
      * weebSH.korra.generateWaifuInsult('https://cdn.discordapp.com/avatars/140149699486154753/a_211d333073a63b3adfd13943268fc7a1.webp?size=1024')
      * .then(console.log)
@@ -177,7 +177,7 @@ class Korra extends Base {
             options = Object.assign({...this.options }, options);
             options.data = {
                 "avatar": avatar
-            }
+            };
             options.axios = {
                 responseType: 'arraybuffer'
             };
@@ -192,14 +192,14 @@ class Korra extends Base {
                 .catch(err => {
                     reject(new this.Error(err, _stackTrace));
                 });
-        })
+        });
     }
 
     /**
      * 
      * @param {string} firstTarget - The direct URL to the image of the first target
      * @param {string} secondTarget - The direct URL to the image of the second target
-     * @param {KorraOptions} [options={}] 
+     * @param {KorraOptions} [options={}] An additional object of options
      * @example
      * weebSH.korra.generateLoveShip('https://cdn.discordapp.com/avatars/128392910574977024/174c3436af3e4857accb4a32e2f9f220.webp?size=1024', 'https://cdn.discordapp.com/avatars/108638204629925888/e05fb8c7720c3618569828246e176fb4.webp?size=1024')
      * .then(console.log)
@@ -220,7 +220,7 @@ class Korra extends Base {
             options.data = {
                 targetOne: firstTarget,
                 targetTwo: secondTarget
-            }
+            };
             options.axios = {
                 responseType: 'arraybuffer'
             };
@@ -240,8 +240,8 @@ class Korra extends Base {
 
     /**
      * 
-     * @param {LicenseOptions} licenseOptions 
-     * @param {KorraOptions} [options={}]  
+     * @param {LicenseOptions} licenseOptions - The options for this license generation
+     * @param {KorraOptions} [options={}] An additional object of options
      * @example
      * weebSH.korra.generateLicense({title: 'Baguette License', avatar: 'https://cdn.discordapp.com/avatars/128392910574977024/174c3436af3e4857accb4a32e2f9f220.webp?size=1024'})
      * .then(console.log)

@@ -1,6 +1,5 @@
 'use strict';
 
-const { join } = require('path');
 const Toph = require('./src/Toph/Toph.js');
 const Korra = require('./src/Korra/Korra.js');
 const Shimakaze = require('./src/Shimakaze/Shimakaze.js');
