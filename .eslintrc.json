@@ -1,6 +1,6 @@
 {
     "parserOptions": {
-        "ecmaVersion": 8,
+        "ecmaVersion": 9,
         "sourceType": "module",
         "ecmaFeatures": {
             "jsx": true
@@ -8,6 +8,10 @@
     },
     "env": {
         "node": true
+    },
+    "globals": {
+        "Map": true,
+        "Promise": true
     },
     "rules": {
         "eqeqeq": "warn",
@@ -19,5 +23,4 @@
         "no-unused-vars": "warn",
         "no-undef": "error"
     }
-
 }
