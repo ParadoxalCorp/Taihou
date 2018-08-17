@@ -64,7 +64,7 @@ class Korra extends Base {
     getStatus(options = {}) {
         return new Promise(async(resolve) => {
             options = Object.assign({...this.options }, options);
-            this.status(`${options.baseURL}${constants.endpoints.GET_KORRA_STATUS}`, options)
+            this._status(`${options.baseURL}${constants.endpoints.GET_KORRA_STATUS}`, options)
                 .then(res => {
                     return resolve(res.request.res.statusCode === 200 ? true : false);
                 })
@@ -96,11 +96,11 @@ class Korra extends Base {
                 return reject(new this.Error('The type parameter is mandatory', _stackTrace));
             }
             options = Object.assign({...this.options }, options);
-            options.params = this.addURLParams({ type: type }, simpleOptions, options);
+            options.params = this._addURLParams({ type: type }, simpleOptions, options);
             options.axios = {
                 responseType: 'arraybuffer'
             };
-            this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.GENERATE_SIMPLE}`, 'get', options), options)
+            this.requestHandler.queueRequest(this._formatRequest(`${options.baseURL}${constants.endpoints.GENERATE_SIMPLE}`, 'get', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
                         reject(new this.Error(res, _stackTrace));
@@ -136,11 +136,11 @@ class Korra extends Base {
                 return reject(new this.Error('Both the status and avatar parameters are required', _stackTrace));
             }
             options = Object.assign({...this.options }, options);
-            options.params = this.addURLParams({ status: status, avatar: encodeURIComponent(avatar) }, [], options);
+            options.params = this._addURLParams({ status: status, avatar: encodeURIComponent(avatar) }, [], options);
             options.axios = {
                 responseType: 'arraybuffer'
             };
-            this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.GENERATE_DISCORD_STATUS}`, 'get', options), options)
+            this.requestHandler.queueRequest(this._formatRequest(`${options.baseURL}${constants.endpoints.GENERATE_DISCORD_STATUS}`, 'get', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
                         reject(new this.Error(res, _stackTrace));
@@ -181,7 +181,7 @@ class Korra extends Base {
             options.axios = {
                 responseType: 'arraybuffer'
             };
-            this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.GENERATE_WAIFU_INSULT}`, 'post', options), options)
+            this.requestHandler.queueRequest(this._formatRequest(`${options.baseURL}${constants.endpoints.GENERATE_WAIFU_INSULT}`, 'post', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
                         reject(new this.Error(res, _stackTrace));
@@ -224,7 +224,7 @@ class Korra extends Base {
             options.axios = {
                 responseType: 'arraybuffer'
             };
-            this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.GENERATE_LOVE_SHIP}`, 'post', options), options)
+            this.requestHandler.queueRequest(this._formatRequest(`${options.baseURL}${constants.endpoints.GENERATE_LOVE_SHIP}`, 'post', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
                         reject(new this.Error(res, _stackTrace));
@@ -263,7 +263,7 @@ class Korra extends Base {
             options.axios = {
                 responseType: 'arraybuffer'
             };
-            this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.GENERATE_LICENSE}`, 'post', options), options)
+            this.requestHandler.queueRequest(this._formatRequest(`${options.baseURL}${constants.endpoints.GENERATE_LICENSE}`, 'post', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
                         reject(new this.Error(res, _stackTrace));

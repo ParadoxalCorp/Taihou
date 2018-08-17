@@ -89,7 +89,7 @@ class Shimakaze extends Base {
     async getStatus(options = {}) {
         return new Promise(async(resolve) => {
             options = Object.assign({...this.options }, options);
-            this.status(`${options.baseURL}${constants.endpoints.GET_SHIMAKAZE_STATUS}`, options)
+            this._status(`${options.baseURL}${constants.endpoints.GET_SHIMAKAZE_STATUS}`, options)
                 .then(res => {
                     return resolve(res.request.res.statusCode === 200 ? true : false);
                 })
@@ -126,7 +126,7 @@ class Shimakaze extends Base {
             if (typeof actualBotID !== 'string' || typeof targetID !== 'string') {
                 return reject(new this.Error('Both the botID and targetID parameters are required', _stackTrace));
             }
-            this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.GET_USER_REPUTATION(actualBotID, targetID)}`, 'get', options), options)
+            this.requestHandler.queueRequest(this._formatRequest(`${options.baseURL}${constants.endpoints.GET_USER_REPUTATION(actualBotID, targetID)}`, 'get', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
                         reject(new this.Error(res, _stackTrace));
@@ -168,7 +168,7 @@ class Shimakaze extends Base {
             options.data = {
                 source_user: reputationOptions.sourceID
             };
-            this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.GIVE_REPUTATION(reputationOptions.botID, reputationOptions.targetID)}`, 'post', options), options)
+            this.requestHandler.queueRequest(this._formatRequest(`${options.baseURL}${constants.endpoints.GIVE_REPUTATION(reputationOptions.botID, reputationOptions.targetID)}`, 'post', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
                         reject(new this.Error(res, _stackTrace));
@@ -208,9 +208,9 @@ class Shimakaze extends Base {
                 return reject(new this.Error('Both the resetOptions.botID and resetOptions.targetID parameters are required', _stackTrace));
             }
             if (resetOptions.resetCooldown && typeof resetOptions.resetCooldown === 'boolean') {
-                options.params = this.addURLParams({ cooldown: resetOptions.resetCooldown }, [], options);
+                options.params = this._addURLParams({ cooldown: resetOptions.resetCooldown }, [], options);
             }
-            this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.RESET_USER_REPUTATION(resetOptions.botID, resetOptions.targetID)}`, 'post', options), options)
+            this.requestHandler.queueRequest(this._formatRequest(`${options.baseURL}${constants.endpoints.RESET_USER_REPUTATION(resetOptions.botID, resetOptions.targetID)}`, 'post', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
                         reject(new this.Error(res, _stackTrace));
@@ -252,7 +252,7 @@ class Shimakaze extends Base {
             options.data = {
                 increase: increaseOptions.increase
             };
-            this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.INCREASE_USER_REPUTATION(increaseOptions.botID, increaseOptions.targetID)}`, 'post', options), options)
+            this.requestHandler.queueRequest(this._formatRequest(`${options.baseURL}${constants.endpoints.INCREASE_USER_REPUTATION(increaseOptions.botID, increaseOptions.targetID)}`, 'post', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
                         reject(new this.Error(res, _stackTrace));
@@ -294,7 +294,7 @@ class Shimakaze extends Base {
             options.data = {
                 decrease: decreaseOptions.decrease
             };
-            this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.DECREASE_USER_REPUTATION(decreaseOptions.botID, decreaseOptions.targetID)}`, 'post', options), options)
+            this.requestHandler.queueRequest(this._formatRequest(`${options.baseURL}${constants.endpoints.DECREASE_USER_REPUTATION(decreaseOptions.botID, decreaseOptions.targetID)}`, 'post', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
                         reject(new this.Error(res, _stackTrace));
@@ -326,7 +326,7 @@ class Shimakaze extends Base {
 
         return new Promise(async(resolve, reject) => {
             options = Object.assign({...this.options }, options);
-            this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.GET_SETTINGS}`, 'get', options), options)
+            this.requestHandler.queueRequest(this._formatRequest(`${options.baseURL}${constants.endpoints.GET_SETTINGS}`, 'get', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
                         reject(new this.Error(res, _stackTrace));
@@ -363,7 +363,7 @@ class Shimakaze extends Base {
                 return reject(new this.Error('The settings objects is mandatory, you cannot update nothing', _stackTrace));
             }
             options.data = settings;
-            this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.SET_SETTINGS}`, 'post', options), options)
+            this.requestHandler.queueRequest(this._formatRequest(`${options.baseURL}${constants.endpoints.SET_SETTINGS}`, 'post', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
                         reject(new this.Error(res, _stackTrace));

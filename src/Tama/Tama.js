@@ -94,7 +94,7 @@ class Tama extends Base {
     async getStatus(options = {}) {
         return new Promise(async(resolve) => {
             options = Object.assign({...this.options }, options);
-            this.status(`${options.baseURL}${constants.endpoints.GET_TAMA_STATUS}`, options)
+            this._status(`${options.baseURL}${constants.endpoints.GET_TAMA_STATUS}`, options)
                 .then(res => {
                     return resolve(res.request.res.statusCode === 200 ? true : false);
                 })
@@ -134,7 +134,7 @@ class Tama extends Base {
                     return resolve(setting);
                 }
             }
-            this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.GET_SETTING(type, id)}`, 'get', options), options)
+            this.requestHandler.queueRequest(this._formatRequest(`${options.baseURL}${constants.endpoints.GET_SETTING(type, id)}`, 'get', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
                         reject(new this.Error(res, _stackTrace));
@@ -175,7 +175,7 @@ class Tama extends Base {
                 return reject(new this.Error('The createOptions.type, createOptions.id and createOptions.data parameters are mandatory', _stackTrace));
             }
             options.data = createOptions.data;
-            this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.CREATE_OR_UPDATE_SETTING(createOptions.type, createOptions.id)}`, 'post', options), options)
+            this.requestHandler.queueRequest(this._formatRequest(`${options.baseURL}${constants.endpoints.CREATE_OR_UPDATE_SETTING(createOptions.type, createOptions.id)}`, 'post', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
                         reject(new this.Error(res, _stackTrace));
@@ -215,7 +215,7 @@ class Tama extends Base {
                 return reject(new this.Error('The updateOptions.type, updateOptions.id and updateOptions.data parameters are mandatory', _stackTrace));
             }
             options.data = updateOptions.data;
-            this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.CREATE_OR_UPDATE_SETTING(updateOptions.type, updateOptions.id)}`, 'post', options), options)
+            this.requestHandler.queueRequest(this._formatRequest(`${options.baseURL}${constants.endpoints.CREATE_OR_UPDATE_SETTING(updateOptions.type, updateOptions.id)}`, 'post', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
                         reject(new this.Error(res, _stackTrace));
@@ -255,7 +255,7 @@ class Tama extends Base {
             if (typeof type !== 'string' || (typeof id !== 'string' && typeof id !== 'number')) {
                 return reject(new this.Error('The type and id parameters are mandatory', _stackTrace));
             }
-            this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.DELETE_SETTING(type, id)}`, 'delete', options), options)
+            this.requestHandler.queueRequest(this._formatRequest(`${options.baseURL}${constants.endpoints.DELETE_SETTING(type, id)}`, 'delete', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
                         reject(new this.Error(res, _stackTrace));
@@ -294,7 +294,7 @@ class Tama extends Base {
             if (typeof listOptions.type !== 'string' || (typeof listOptions.id !== 'string' && typeof listOptions.id !== 'number') || typeof listOptions.subType !== 'string') {
                 return reject(new this.Error('The listOptions.type, listOptions.id and listOptions.subType parameters are mandatory', _stackTrace));
             }
-            this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.LIST_SUBSETTINGS(listOptions.type, listOptions.id, listOptions.subType)}`, 'get', options), options)
+            this.requestHandler.queueRequest(this._formatRequest(`${options.baseURL}${constants.endpoints.LIST_SUBSETTINGS(listOptions.type, listOptions.id, listOptions.subType)}`, 'get', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
                         reject(new this.Error(res, _stackTrace));
@@ -337,7 +337,7 @@ class Tama extends Base {
                     return resolve(subSetting.data);
                 }
             }
-            this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.GET_SUBSETTING(getSubSettingOptions.type, getSubSettingOptions.id, getSubSettingOptions.subType, getSubSettingOptions.subId)}`, 'get', options), options)
+            this.requestHandler.queueRequest(this._formatRequest(`${options.baseURL}${constants.endpoints.GET_SUBSETTING(getSubSettingOptions.type, getSubSettingOptions.id, getSubSettingOptions.subType, getSubSettingOptions.subId)}`, 'get', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
                         reject(new this.Error(res, _stackTrace));
@@ -379,7 +379,7 @@ class Tama extends Base {
                 return reject(new this.Error('The createOptions.type, createOptions.id, createOptions.subType, createOptions.subId and createOptions.data parameters are mandatory', _stackTrace));
             }
             options.data = createOptions.data;
-            this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.CREATE_OR_UPDATE_SUBSETTING(createOptions.type, createOptions.id, createOptions.subType, createOptions.subId)}`, 'post', options), options)
+            this.requestHandler.queueRequest(this._formatRequest(`${options.baseURL}${constants.endpoints.CREATE_OR_UPDATE_SUBSETTING(createOptions.type, createOptions.id, createOptions.subType, createOptions.subId)}`, 'post', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
                         reject(new this.Error(res, _stackTrace));
@@ -420,7 +420,7 @@ class Tama extends Base {
                 return reject(new this.Error('The updateOptions.type, updateOptions.id, updateOptions.subType, updateOptions.subId and updateOptions.data parameters are mandatory', _stackTrace));
             }
             options.data = updateOptions.data;
-            this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.CREATE_OR_UPDATE_SUBSETTING(updateOptions.type, updateOptions.id, updateOptions.subType, updateOptions.subId)}`, 'post', options), options)
+            this.requestHandler.queueRequest(this._formatRequest(`${options.baseURL}${constants.endpoints.CREATE_OR_UPDATE_SUBSETTING(updateOptions.type, updateOptions.id, updateOptions.subType, updateOptions.subId)}`, 'post', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
                         reject(new this.Error(res, _stackTrace));
@@ -460,7 +460,7 @@ class Tama extends Base {
             if (typeof deleteOptions.type !== 'string' || (typeof deleteOptions.id !== 'string' && typeof deleteOptions.id !== 'number') || typeof deleteOptions.subType !== 'string' || (typeof deleteOptions.subId !== 'string' && typeof deleteOptions.subId !== 'number') || !deleteOptions.data) {
                 return reject(new this.Error('The deleteOptions.type, deleteOptions.id, deleteOptions.subType, deleteOptions.subId and deleteOptions.data parameters are mandatory', _stackTrace));
             }
-            this.requestHandler.queueRequest(this.formatRequest(`${options.baseURL}${constants.endpoints.DELETE_SUBSETTING(deleteOptions.type, deleteOptions.id, deleteOptions.subType, deleteOptions.subId)}`, 'delete', options), options)
+            this.requestHandler.queueRequest(this._formatRequest(`${options.baseURL}${constants.endpoints.DELETE_SUBSETTING(deleteOptions.type, deleteOptions.id, deleteOptions.subType, deleteOptions.subId)}`, 'delete', options), options)
                 .then(res => {
                     if (res.request.res.statusCode !== 200) {
                         reject(new this.Error(res, _stackTrace));
