@@ -185,7 +185,7 @@ class Toph extends Base {
             type
         }, ['nsfw', 'tags', 'hidden', 'filetype'], options);
         return this.requestHandler.queueRequest(this._formatRequest(`${options.baseURL}${constants.endpoints.GET_RANDOM_IMAGE}`, 'get', options), options)
-            .then(res => res.data)
+            .then(res => res.data);
     }
 
     /**
