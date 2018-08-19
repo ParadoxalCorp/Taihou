@@ -1,6 +1,6 @@
 {
     "name": "taihou",
-    "version": "1.0.2",
+    "version": "2.0.2",
     "description": "A wrapper for weeb.sh",
     "main": "index.js",
     "repository": {

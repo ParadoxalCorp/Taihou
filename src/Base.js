@@ -1,13 +1,11 @@
 'use strict';
 
 const RequestHandler = require('./RequestHandler');
-const Error = require('./Error');
 const fs = require('fs');
 
 class Base {
     constructor(options) {
         this.requestHandler = new RequestHandler(options);
-        this.Error = Error;
     }
 
     /**
@@ -19,8 +17,8 @@ class Base {
      * @private
      * @returns {void}
      */
-    status(url, options) {
-        return this.requestHandler.queueRequest(this.formatRequest(url, 'get', options), { beforeNextRequest: options.beforeNextRequest || 60 });
+    _status(url, options) {
+        return this.requestHandler.queueRequest(this._formatRequest(url, 'get', options), { beforeNextRequest: options.beforeNextRequest || 60 });
     }
 
     /**
@@ -33,7 +31,7 @@ class Base {
      * @memberof Base
      * @private
      */
-    formatRequest(url, method, options) {
+    _formatRequest(url, method, options) {
         return async() => {
             const config = {
                 timeout: options.timeout,
@@ -58,7 +56,7 @@ class Base {
      * @memberof Base
      * @private
      */
-    addURLParams(baseParams, paramsToAdd, options) {
+    _addURLParams(baseParams, paramsToAdd, options) {
         if (!Array.isArray(paramsToAdd)) {
             baseParams = Object.assign(baseParams, paramsToAdd);
         } else {
@@ -76,6 +74,7 @@ class Base {
      * 
      * @param {string} path - The path
      * @returns {Promise<any>} The file
+     * @private
      * @memberof Base
      */
     _readFileAsync(path) {
