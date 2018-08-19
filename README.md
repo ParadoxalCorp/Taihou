@@ -1,5 +1,7 @@
 # Taihou - A weeb.sh wrapper
 
+[![CircleCI](https://circleci.com/gh/ParadoxalCorp/Taihou.svg?style=svg)](https://circleci.com/gh/ParadoxalCorp/Taihou)
+
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/dcde3c99ed014a1284391aee2abc04b6)](https://www.codacy.com/app/paradoxalcorp/Taihou?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ParadoxalCorp/Taihou&amp;utm_campaign=Badge_Grade)
 
 Taihou is a promise-returning Node.js wrapper for [weeb.sh](https://docs.weeb.sh/#introduction). Taihou is easy to use but also has 
