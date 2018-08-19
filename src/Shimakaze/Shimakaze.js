@@ -35,14 +35,14 @@ const constants = require('../constants');
 /**  
  * @typedef IncreaseUserReputationOptions
  * @prop {String} botID - The ID of the bot reputation database to use
- * @prop {String} targetID - The ID of the user to reset
+ * @prop {String} targetID - The ID of the user who should get their reputation increased
  * @prop {Number} increase - By how much should the user reputation be increased
  */
 
 /**  
  * @typedef DecreaseUserReputationOptions
  * @prop {String} botID - The ID of the bot reputation database to use
- * @prop {String} targetID - The ID of the user to reset
+ * @prop {String} targetID - The ID of the user from who's reputation should be decreased
  * @prop {Number} decrease - By how much should the user reputation be decreased
  */
 

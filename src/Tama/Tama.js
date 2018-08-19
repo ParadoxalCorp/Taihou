@@ -24,7 +24,7 @@ const Collection = require('../Collection');
  * @typedef CreateOrUpdateOptions
  * @prop {String} type - The type of the setting
  * @prop {String|Number} id - The id of the setting
- * @prop {any} data - The data you want this setting to hold. Please note that existing data will be overriden by this, so in the case of an update, specify unchanged fields too
+ * @prop {Object} data - The data you want this setting to hold. Please note that existing data will be overriden by this, so in the case of an update, specify unchanged fields too
  */
 
 /**  
@@ -48,25 +48,24 @@ const Collection = require('../Collection');
  * @prop {String|Number} id - The id of the setting
  * @prop {String} subType - The type of the sub-setting
  * @prop {String|Number} subId - The id of the sub-setting
- * @prop {any} data - The data you want this sub-setting to hold. Please note that existing data will be overriden by this, so in the case of an update, specify unchanged fields too
+ * @prop {Object} data - The data you want this sub-setting to hold. Please note that existing data will be overriden by this, so in the case of an update, specify unchanged fields too
  */
 
  /** @typedef {Object} SubSetting
   * @prop {String} id The ID of the setting
   * @prop {String} type The type of the setting
   * @prop {String} accountId The ID of the account that created this sub-setting
-  * @prop {any} data The data contained by this sub-setting
+  * @prop {Object} data The data contained by this sub-setting
   * @prop {String} subId The ID of the sub-setting
   * @prop {String} subType The type of the sub-setting
-  * @prop {Boolean} [cached] Only existing on sub-settings that can be returned from the cache, whether this sub-setting is returned from the cache
   */
 
   /** @typedef {Object} Setting
   * @prop {String} id The ID of the setting
   * @prop {String} type The type of the setting
   * @prop {String} accountId The ID of the account that created this setting
-  * @prop {any} data The data contained by this setting
-  * @prop {Boolean} [cached] Only existing on settings that can be returned from the cache, whether this setting is returned from the cache
+  * @prop {Object} data The data contained by this setting
+  */
 
  /** 
   * @typedef {Object} DeletedSubSetting
@@ -86,12 +85,14 @@ const Collection = require('../Collection');
   * @typedef {Object} SettingResponse
   * @prop {String} status The HTTP status code of the request
   * @prop {Setting} setting The setting object
+  * @prop {Boolean} cached Whether this setting is returned from the cache
   */
 
   /** 
   * @typedef {Object} SubSettingResponse
   * @prop {String} status The HTTP status code of the request
-  * @prop {SubSettingResponse} subsetting The setting object
+  * @prop {SubSetting} subsetting The setting object
+  * @prop {Boolean} cached Whether this sub-setting is returned from the cache
   */
 
   /** 
@@ -170,9 +171,9 @@ class Tama extends Base {
      * weebSH.tama.getSetting('guilds', '300407204987666432')
      * .then(console.log)
      * .catch(console.error)
-     * @returns {Promise<GetSetting>} The parsed response object, with a `cached` property representing whether the returned setting is from the cache, refer to https://docs.weeb.sh/#get-setting for its structure
+     * @returns {Promise<SettingResponse>} The parsed response object, with a `cached` property representing whether the returned setting is from the cache, refer to https://docs.weeb.sh/#get-setting for its structure
      */
-    getSetting(type, id, options = {}) {
+    async getSetting(type, id, options = {}) {
         options = Object.assign({ ...this.options
         }, options);
         if (typeof type !== 'string' || (typeof id !== 'string' && typeof id !== 'number')) {
@@ -204,7 +205,7 @@ class Tama extends Base {
      * weebSH.tama.createSetting({type: 'guilds', id: '300407204987666432', data: {prefix: 'poi', baguette: true}})
      * .then(console.log)
      * .catch(console.error)
-     * @returns {Promise<GetSetting>} The parsed response object, refer to https://docs.weeb.sh/#create-update-setting for its structure
+     * @returns {Promise<SettingResponse>} The parsed response object, refer to https://docs.weeb.sh/#create-update-setting for its structure
      */
     createSetting(createOptions, options = {}) {
         options = Object.assign({ ...this.options
@@ -231,7 +232,7 @@ class Tama extends Base {
      * weebSH.tama.updateSetting({type: 'guilds', id: '300407204987666432', data: {prefix: 'poi', baguette: false}})
      * .then(console.log)
      * .catch(console.error)
-     * @returns {Promise<GetSetting>} The parsed response object, refer to https://docs.weeb.sh/#create-update-setting for its structure
+     * @returns {Promise<SettingResponse>} The parsed response object, refer to https://docs.weeb.sh/#create-update-setting for its structure
      */
     updateSetting(updateOptions, options = {}) {
         return this.createSetting(updateOptions, options);
@@ -296,7 +297,7 @@ class Tama extends Base {
      * .catch(console.error)
      * @returns {Promise<SubSettingResponse>} The parsed response object, along with a `cached` property representing whether the returned sub-setting is from the cache, refer to https://docs.weeb.sh/#get-sub-settings for its structure
      */
-    getSubSetting(getSubSettingOptions, options = {}) {
+    async getSubSetting(getSubSettingOptions, options = {}) {
         options = Object.assign({ ...this.options
         }, options);
         if (typeof getSubSettingOptions.type !== 'string' || (typeof getSubSettingOptions.id !== 'string' && typeof getSubSettingOptions.id !== 'number') || typeof getSubSettingOptions.subType !== 'string' || (typeof getSubSettingOptions.subId !== 'string' && typeof getSubSettingOptions.subId !== 'number')) {
@@ -360,7 +361,7 @@ class Tama extends Base {
      * @param {CreateOrUpdateSubSettingOptions} updateOptions - An object of parameters
      * @param {RequestOptions} [options={}] An additional object of options
      * @example 
-     * weebSH.tama.createSubSetting({type: 'guilds', id: '300407204987666432', subType: 'channels', subId: '439457506960605185', data: {weeb: true}})
+     * weebSH.tama.updateSubSetting({type: 'guilds', id: '300407204987666432', subType: 'channels', subId: '439457506960605185', data: {weeb: true}})
      * .then(console.log)
      * .catch(console.error)
      * @returns {Promise<SubSettingResponse>} The parsed response object, refer to https://docs.weeb.sh/#create-update-sub-setting for its structure
