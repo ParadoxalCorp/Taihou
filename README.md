@@ -46,12 +46,17 @@ The lowest known Node.js version supported is Node.js `8.3.0`
 
 ## Changelog
 
+### Important Security Patch 2.0.3  
+
+> 2.0.2 => 2.0.3
+
+This patch fixes a security issue within axios by bumping the required axios version from `0.18.0` to `0.18.1`, see the relevant changelog [here](https://github.com/axios/axios/blob/v0.18.1/CHANGELOG.md)
+
 ### Update 2.0.2
 
 > 1.0.2 => 2.0.2
 
-This update optimize a bit the internal code documentation and document the responses of all methods, which should make any code editor that supports JSDoc able to provide 
-decent Intellisense 
+This update optimize a bit the internal code documentation and document the responses of all methods, which should make any code editor that supports JSDoc able to provide decent Intellisense.
 
 The reason why this is a major update is because of the potentially breaking rework of error handling, rejected/thrown errors are no longer instances of the `TaihouError` class, but instances of Node.js's Error class. Errors that are directly originating from the request sent to the weeb.sh servers are following [Axios's error scheme](https://www.npmjs.com/package/axios#handling-errors)
 
