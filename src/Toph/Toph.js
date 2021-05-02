@@ -2,7 +2,8 @@
 
 const Base = require('../Base');
 const constants = require('../constants');
-/** @typedef {import("../../index.js").TaihouOptions} TaihouOptions 
+/** 
+ * @typedef {import("../../index.js").TaihouOptions} TaihouOptions 
  * @typedef {import("axios")} Axios
  */
 
@@ -110,7 +111,7 @@ class Toph extends Base {
      * @memberof Toph
      * @example 
      * weebSH.toph.getStatus()
-     * .then(console.log) 
+     *  .then(console.log) 
      * @returns {Promise<Boolean>} Whether or not Toph is online 
      */
     getStatus(options = {}) {
@@ -128,8 +129,8 @@ class Toph extends Base {
      * @param {TophOptions} [options={}] - An object of additional options
      * @example 
      * weebSH.toph.uploadImage({url: 'https://wew.png', type: 'wew', hidden: true, nsfw: false})
-     * .then(console.log)
-     * .catch(console.error)
+     *  .then(console.log)
+     *  .catch(console.error)
      * @returns {Promise<UploadResponse>} An image object with a file key
      * @memberof Toph
      */
@@ -168,8 +169,8 @@ class Toph extends Base {
      * @memberof Toph
      * @example 
      * weebSH.toph.getRandomImage('pat')
-     * .then(console.log)
-     * .catch(console.error)
+     *  .then(console.log)
+     *  .catch(console.error)
      * @returns {Promise<ImageInfo>} The parsed image object, refer to https://docs.weeb.sh/#random-image for its structure
      */
     getRandomImage(type, options = {}) {
@@ -195,8 +196,8 @@ class Toph extends Base {
      * @returns {Promise<ImageTypesResponse>} The parsed response object that you can see here https://docs.weeb.sh/#image-types
      * @example
      * weebSH.toph.getImageTypes()
-     * .then(console.log)
-     * .catch(console.error)
+     *  .then(console.log)
+     *  .catch(console.error)
      * @memberof Toph
      */
     getImageTypes(options = {}) {
@@ -213,8 +214,8 @@ class Toph extends Base {
      * @param {TophOptions} [options={}] - An object of additional options
      * @example 
      * weebSH.toph.getImageTags()
-     * .then(console.log)
-     * .catch(console.error)
+     *  .then(console.log)
+     *  .catch(console.error)
      * @returns {Promise<ImageTagsResponse>} The parsed response object that you can see here https://docs.weeb.sh/#image-tags
      * @memberof Toph
      */
@@ -233,8 +234,8 @@ class Toph extends Base {
      * @param {TophOptions} [options={}] - An object of additional options
      * @example 
      * weebSH.toph.getImageInfo('6d875e')
-     * .then(console.log)
-     * .catch(console.error)
+     *  .then(console.log)
+     *  .catch(console.error)
      * @returns {Promise<ImageInfo>} The parsed response object that you can see here https://docs.weeb.sh/#image-info
      * @memberof Toph
      */
@@ -256,8 +257,8 @@ class Toph extends Base {
      * @param {TophOptions} [options={}] - An object of additional options
      * @example 
      * weebSH.toph.addTagsToImage('6d875e', ['baguette'])
-     * .then(console.log)
-     * .catch(console.error)
+     *  .then(console.log)
+     *  .catch(console.error)
      * @returns {Promise<any>} An object detailing added and skipped tags
      * @memberof Toph
      */
@@ -284,8 +285,8 @@ class Toph extends Base {
      * @param {TophOptions} [options={}] - An object of additional options
      * @example 
      * weebSH.toph.removeTagsFromImage('6d875e', ['baguette'])
-     * .then(console.log)
-     * .catch(console.error)
+     *  .then(console.log)
+     *  .catch(console.error)
      * @returns {Promise<any>} The returned data
      * @memberof Toph
      */
@@ -311,8 +312,8 @@ class Toph extends Base {
      * @param {TophOptions} [options={}] - An object of additional options
      * @example 
      * weebSH.toph.deleteImage('6d875e')
-     * .then(console.log)
-     * .catch(console.error)
+     *  .then(console.log)
+     *  .catch(console.error)
      * @returns {Promise<any>} An object containing a success confirmation
      * @memberof Toph
      */

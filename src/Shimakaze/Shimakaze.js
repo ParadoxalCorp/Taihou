@@ -12,7 +12,8 @@ const constants = require('../constants');
  * @prop {String} botID - The ID of the bot reputation database to access, if you specify it here, you won't need to specify it in every methods. You can always override it by specifying it in the method, note that methods which don't take objects as argument (methods with 2 or fewer parameters) will take the passed arguments count; As in, if the method expect at least 2 arguments (the bot id and something else) and you pass only one argument, it will be assumed that you want to use the botID set in the constructor
  */
 
-/** @typedef {Object} KorraRequestOptions
+/** 
+ * @typedef {Object} KorraRequestOptions
  * @prop {Number} beforeNextRequest - Time in milliseconds before the next request in the queue should be executed. Is ignored if burst mode is enabled
  */
 
@@ -78,7 +79,8 @@ const constants = require('../constants');
  * @prop {Number} status The HTTP status code of the request
  */
 
- /** @typedef {Object} GiveReputationResponse
+ /** 
+ * @typedef {Object} GiveReputationResponse
  * @prop {Number} status The HTTP status code of the request
  * @prop {String} date Current server time in UTC
  * @prop {String} message Informational message
@@ -96,7 +98,8 @@ const constants = require('../constants');
  * @prop {String} accountId Internal id associated with the token calling the API
  */
 
- /** @typedef {Object} SettingsResponse 
+ /** 
+  * @typedef {Object} SettingsResponse 
   * @prop {Number} status The HTTP status code of the request
   * @prop {ReputationSettingsResponse} settings The settings
   */
@@ -113,8 +116,7 @@ class Shimakaze extends Base {
     constructor(token, options, axios) {
         super(options);
         this.token = token;
-        this.options = options.shimakaze || options.images ? Object.assign({ ...options
-        }, options.shimakaze || options.images) : options;
+        this.options = options.shimakaze || options.images ? Object.assign({ ...options }, options.shimakaze || options.images) : options;
         this.options.requestsPerMinute = this.options.requestsPerMinute || constants.shimakaze.requestsPerMinute;
         this.axios = axios;
         this.getStatus = this.getStatus.bind(this);
@@ -135,8 +137,8 @@ class Shimakaze extends Base {
      * @memberof Shimakaze
      * @example 
      * weebSH.shimakaze.getStatus()
-     * .then(console.log)
-     * .catch(console.error)
+     *  .then(console.log)
+     *  .catch(console.error)
      * @returns {Promise<Boolean>} Whether or not Shimakaze is online 
      */
     async getStatus(options = {}) {
@@ -155,8 +157,8 @@ class Shimakaze extends Base {
      * @param {RequestOptions} [options={}] An additional object of options
      * @example 
      * weebSH.shimakaze.getUserReputation('327144735359762432', '184051394179891201')
-     * .then(console.log)
-     * .catch(console.error)
+     *  .then(console.log)
+     *  .catch(console.error)
      * @returns {Promise<GetReputationResponse>} The parsed response object, refer to https://docs.weeb.sh/#get-reputation-of-user for its structure
      */
     getUserReputation(botID, targetID, options = {}) {
@@ -180,8 +182,8 @@ class Shimakaze extends Base {
      * @param {RequestOptions} [options={}] An additional object of options
      * @example 
      * weebSH.shimakaze.postUserReputation({botID: '184051394179891201', targetID: '128392910574977024', sourceID: '140149699486154753'})
-     * .then(console.log)
-     * .catch(console.error)
+     *  .then(console.log)
+     *  .catch(console.error)
      * @returns {Promise<GiveReputationResponse>} The parsed response object, refer to https://docs.weeb.sh/#get-reputation-of-user for its structure
      */
     giveReputation(reputationOptions, options = {}) {
@@ -207,8 +209,8 @@ class Shimakaze extends Base {
      * @param {RequestOptions} [options={}] An additional object of options
      * @example 
      * weebSH.shimakaze.resetUserReputation({botID: '327144735359762432', targetID: '184051394179891201'})
-     * .then(console.log)
-     * .catch(console.error)
+     *  .then(console.log)
+     *  .catch(console.error)
      * @returns {Promise<ReputationResponse>} The parsed response object, refer to https://docs.weeb.sh/#reset-user-reputation for its structure
      */
     resetUserReputation(resetOptions, options = {}) {
@@ -236,8 +238,8 @@ class Shimakaze extends Base {
      * @param {RequestOptions} [options={}] An additional object of options
      * @example 
      * weebSH.shimakaze.increaseUserReputation({botID: '327144735359762432', targetID: '184051394179891201', increase: 1})
-     * .then(console.log)
-     * .catch(console.error)
+     *  .then(console.log)
+     *  .catch(console.error)
      * @returns {Promise<ReputationResponse>} The parsed response object, refer to https://docs.weeb.sh/#increase-user-reputation for its structure
      */
     increaseUserReputation(increaseOptions, options = {}) {
@@ -263,8 +265,8 @@ class Shimakaze extends Base {
      * @param {RequestOptions} [options={}] An additional object of options
      * @example 
      * weebSH.shimakaze.decreaseUserReputation({botID: '327144735359762432', targetID: '184051394179891201', decrease: 1})
-     * .then(console.log)
-     * .catch(console.error)
+     *  .then(console.log)
+     *  .catch(console.error)
      * @returns {Promise<ReputationResponse>} The parsed response object, refer to https://docs.weeb.sh/#decrease-user-reputation for its structure
      */
     decreaseUserReputation(decreaseOptions, options = {}) {
@@ -289,8 +291,8 @@ class Shimakaze extends Base {
      * @param {RequestOptions} [options={}] An additional object of options
      * @example 
      * weebSH.shimakaze.getSettings()
-     * .then(console.log)
-     * .catch(console.error)
+     *  .then(console.log)
+     *  .catch(console.error)
      * @returns {Promise<SettingsResponse>} The parsed response object, refer to https://docs.weeb.sh/#get-settings for its structure
      */
     getSettings(options = {}) {
@@ -307,8 +309,8 @@ class Shimakaze extends Base {
      * @param {RequestOptions} [options={}] An additional object of options
      * @example 
      * weebSH.shimakaze.setSettings({reputationPerDay: 3})
-     * .then(console.log)
-     * .catch(console.error)
+     *  .then(console.log)
+     *  .catch(console.error)
      * @returns {Promise<SettingsResponse>} The parsed response object, refer to https://docs.weeb.sh/#set-settings for its structure
      */
     setSettings(settings, options = {}) {

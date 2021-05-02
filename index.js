@@ -8,7 +8,8 @@ const constants = require('./src/constants.js');
 
 const axios = require('axios');
 
-/** @typedef {import("./src/Toph/Toph.js").TophOptions} TophOptions
+/** 
+ * @typedef {import("./src/Toph/Toph.js").TophOptions} TophOptions
  * @typedef {import("./src/Korra/Korra.js").KorraOptions} KorraOptions
  * @typedef {import("./src/Shimakaze/Shimakaze").ShimakazeOptions} ShimakazeOptions
  * @typedef {import("./src/Tama/Tama.js").TamaOptions} TamaOptions

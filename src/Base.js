@@ -49,7 +49,6 @@ class Base {
                 url,
                 ...config
             });
-            return this.axios[method](url, ['post', 'put', 'patch'].includes(method) ? null : config, ['post', 'put', 'patch'].includes(method) ? config : null);
         };
     }
 

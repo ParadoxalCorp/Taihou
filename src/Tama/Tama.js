@@ -13,7 +13,8 @@ const Collection = require('../Collection');
  * @prop {Boolean} useCache - Defaults to true, this define whether to use the cache rather than always requesting to weeb.sh. The cache is updated whenever the setting is updated through Taihou
  */
 
-/** @typedef {Object} TamaRequestOptions
+/** 
+ * @typedef {Object} TamaRequestOptions
  * @prop {Number} beforeNextRequest - Only apply per-request, time in milliseconds before the next request in the queue should be executed. Is ignored if burst mode is enabled
  * @prop {Boolean} useCache - Defaults to true, this define whether to use the cache rather than always requesting to weeb.sh. The cache is updated whenever the setting is updated through Taihou
  */
@@ -150,8 +151,8 @@ class Tama extends Base {
      * @memberof Tama
      * @example
      * weebSH.tama.getStatus()
-     * .then(console.log)
-     * .catch(console.error)
+     *  .then(console.log)
+     *  .catch(console.error)
      * @returns {Promise<Boolean>} Whether or not Tama is online 
      */
     async getStatus(options = {}) {
@@ -169,8 +170,8 @@ class Tama extends Base {
      * @param {RequestOptions} [options={}] - An additional object of options
      * @example 
      * weebSH.tama.getSetting('guilds', '300407204987666432')
-     * .then(console.log)
-     * .catch(console.error)
+     *  .then(console.log)
+     *  .catch(console.error)
      * @returns {Promise<SettingResponse>} The parsed response object, with a `cached` property representing whether the returned setting is from the cache, refer to https://docs.weeb.sh/#get-setting for its structure
      */
     async getSetting(type, id, options = {}) {
@@ -203,8 +204,8 @@ class Tama extends Base {
      * @param {RequestOptions} [options={}] An additional object of options
      * @example 
      * weebSH.tama.createSetting({type: 'guilds', id: '300407204987666432', data: {prefix: 'poi', baguette: true}})
-     * .then(console.log)
-     * .catch(console.error)
+     *  .then(console.log)
+     *  .catch(console.error)
      * @returns {Promise<SettingResponse>} The parsed response object, refer to https://docs.weeb.sh/#create-update-setting for its structure
      */
     createSetting(createOptions, options = {}) {
@@ -230,8 +231,8 @@ class Tama extends Base {
      * @param {RequestOptions} [options={}] An additional object of options
      * @example 
      * weebSH.tama.updateSetting({type: 'guilds', id: '300407204987666432', data: {prefix: 'poi', baguette: false}})
-     * .then(console.log)
-     * .catch(console.error)
+     *  .then(console.log)
+     *  .catch(console.error)
      * @returns {Promise<SettingResponse>} The parsed response object, refer to https://docs.weeb.sh/#create-update-setting for its structure
      */
     updateSetting(updateOptions, options = {}) {
@@ -246,8 +247,8 @@ class Tama extends Base {
      * @param {RequestOptions} [options={}] An additional object of options
      * @example 
      * weebSH.tama.deleteSetting('guilds', '300407204987666432')
-     * .then(console.log)
-     * .catch(console.error)
+     *  .then(console.log)
+     *  .catch(console.error)
      * @returns {Promise<DeleteSettingResponse>} The parsed response object, refer to https://docs.weeb.sh/#delete-setting for its structure
      */
     deleteSetting(type, id, options = {}) {
@@ -272,8 +273,8 @@ class Tama extends Base {
      * @param {RequestOptions} [options={}] An additional object of options
      * @example 
      * weebSH.tama.listSubSettings({type: 'guilds', id: '300407204987666432', subType: 'channels'})
-     * .then(console.log)
-     * .catch(console.error)
+     *  .then(console.log)
+     *  .catch(console.error)
      * @returns {Promise<SubSettingsList>} The parsed response object, refer to https://docs.weeb.sh/#list-sub-settings for its structure
      */
     listSubSettings(listOptions, options = {}) {
@@ -293,8 +294,8 @@ class Tama extends Base {
      * @param {RequestOptions} [options={}] An additional object of options
      * @example 
      * weebSH.tama.getSubSetting({type: 'guilds', id: '300407204987666432', subType: 'channels', subId: '439457506960605185'})
-     * .then(console.log)
-     * .catch(console.error)
+     *  .then(console.log)
+     *  .catch(console.error)
      * @returns {Promise<SubSettingResponse>} The parsed response object, along with a `cached` property representing whether the returned sub-setting is from the cache, refer to https://docs.weeb.sh/#get-sub-settings for its structure
      */
     async getSubSetting(getSubSettingOptions, options = {}) {
@@ -331,8 +332,8 @@ class Tama extends Base {
      * @param {RequestOptions} [options={}] An additional object of options
      * @example 
      * weebSH.tama.createSubSetting({type: 'guilds', id: '300407204987666432', subType: 'channels', subId: '439457506960605185', data: {weeb: false}})
-     * .then(console.log)
-     * .catch(console.error)
+     *  .then(console.log)
+     *  .catch(console.error)
      * @returns {Promise<SubSettingResponse>} The parsed response object, refer to https://docs.weeb.sh/#create-update-sub-setting for its structure
      */
     createSubSetting(createOptions, options = {}) {
@@ -362,8 +363,8 @@ class Tama extends Base {
      * @param {RequestOptions} [options={}] An additional object of options
      * @example 
      * weebSH.tama.updateSubSetting({type: 'guilds', id: '300407204987666432', subType: 'channels', subId: '439457506960605185', data: {weeb: true}})
-     * .then(console.log)
-     * .catch(console.error)
+     *  .then(console.log)
+     *  .catch(console.error)
      * @returns {Promise<SubSettingResponse>} The parsed response object, refer to https://docs.weeb.sh/#create-update-sub-setting for its structure
      */
     updateSubSetting(updateOptions, options = {}) {
@@ -377,8 +378,8 @@ class Tama extends Base {
      * @param {RequestOptions} [options={}] An additional object of options
      * @example 
      * weebSH.tama.deleteSubSetting({type: 'guilds', id: '300407204987666432', subType: 'channels', subId: '439457506960605185'})
-     * .then(console.log)
-     * .catch(console.error)
+     *  .then(console.log)
+     *  .catch(console.error)
      * @returns {Promise<DeletedSubSetting>} The parsed response object, refer to https://docs.weeb.sh/#delete-sub-setting for its structure
      */
     deleteSubSetting(deleteOptions, options = {}) {
