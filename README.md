@@ -46,6 +46,10 @@ The lowest known Node.js version supported is Node.js `8.3.0`
 
 ## Changelog
 
+## Patch 2.0.6
+
+Another security bump for axios, bumping from `0.21.1` to `0.21.2`.
+
 ### Patch 2.0.5
 
 This patch fixes the methods broken by patch 2.0.4
