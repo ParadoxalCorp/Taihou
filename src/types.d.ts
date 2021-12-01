@@ -16,7 +16,7 @@ export type PerServiceOptions = {
 	settings: TamaOptions & TaihouOptions;
 }
 
-export type ConstructorOptions = TaihouOptions & PerServiceOptions;
+export type ConstructorOptions = Partial<TaihouOptions & PerServiceOptions>;
 
 export type KorraOptions = {
 	burst: boolean;
