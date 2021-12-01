@@ -2,12 +2,12 @@
 
 const Base = require('../Base');
 const constants = require('../constants');
-/** 
- * @typedef {import("../../index.js").TaihouOptions} TaihouOptions 
- * @typedef {import("axios")} Axios
+/**
+ * @typedef {import('../types').TaihouOptions} TaihouOptions
+ * @typedef {import('axios').AxiosInstance} Axios
  */
 
-/**  
+/**
  * @typedef {Object} TophOptions
  * @prop {Boolean} nsfw Either a boolean or "only", false entirely filters nsfw, true gets both nsfw and non-nsfw, and "only" gets only nsfw. False by default
  * @prop {Boolean} hidden If true, you only get back hidden images you uploaded. Defaults to false
@@ -19,7 +19,7 @@ const constants = require('../constants');
  * @prop {Number} requestsPerMinute Only apply when instantiating the module, regardless of the mode, define how many requests can be done in a minute. 0 makes it limitless
  */
 
-/**  
+/**
  * @typedef {Object} UploadOptions
  * @prop {String} file Absolute path to a file, takes priority over url argument
  * @prop {String} url Url pointing directly at the image you want to upload, you may only use file or url
@@ -30,7 +30,7 @@ const constants = require('../constants');
  * @prop {String} source Url pointing to the original source of the image
  */
 
-/** @typedef {Object} ImageInfo 
+/** @typedef {Object} ImageInfo
  * @prop {String} id The ID of the image
  * @prop {String} type The type of the image
  * @prop {String} baseType The base type of the image
@@ -52,7 +52,7 @@ const constants = require('../constants');
  * @prop {String} type The type of the image
  */
 
-/**  
+/**
  * @typedef {Object} UploadResponse
  * @prop {Number} status The HTTP status code of the request
  * @prop {ImageInfo} file The uploaded image info
@@ -70,8 +70,8 @@ const constants = require('../constants');
  */
 
 /**
- * 
- * 
+ *
+ *
  * @class Toph
  * @prop {String} token The token given in the constructor of Taihou, formatted according to whether it is a wolke token or not
  * @prop {TaihouOptions & TophOptions} options The **effective** options; e.g, if you specified options specific to Toph, those override the base ones
@@ -79,8 +79,8 @@ const constants = require('../constants');
 
 class Toph extends Base {
     /**
-     * 
-     * @param {String} token - The token 
+     *
+     * @param {String} token - The token
      * @param {TaihouOptions & TophOptions} options - The options for this instance
      * @param {Axios} axios - The axios instance
      */
@@ -106,13 +106,13 @@ class Toph extends Base {
 
     /**
      * Make a simple request to check whether Toph is available or not, due to its nature, this method never rejects
-     * 
+     *
      * @param {TophOptions} [options={}] An optional object of options
      * @memberof Toph
-     * @example 
+     * @example
      * weebSH.toph.getStatus()
-     *  .then(console.log) 
-     * @returns {Promise<Boolean>} Whether or not Toph is online 
+     *  .then(console.log)
+     * @returns {Promise<Boolean>} Whether or not Toph is online
      */
     getStatus(options = {}) {
             options = Object.assign({ ...this.options
@@ -120,14 +120,14 @@ class Toph extends Base {
             return this._status(`${options.baseURL}${constants.endpoints.GET_TOPH_STATUS}`, options)
                 .then(res => res.request.res.statusCode === 200 ? true : false)
                 .catch(() => false);
-    
+
     }
     /**
      * Upload an image to Toph
-     * 
-     * @param {UploadOptions} uploadOptions An object of options 
+     *
+     * @param {UploadOptions} uploadOptions An object of options
      * @param {TophOptions} [options={}] - An object of additional options
-     * @example 
+     * @example
      * weebSH.toph.uploadImage({url: 'https://wew.png', type: 'wew', hidden: true, nsfw: false})
      *  .then(console.log)
      *  .catch(console.error)
@@ -163,11 +163,11 @@ class Toph extends Base {
 
     /**
      * Get a random image from weeb.sh, you can specify both type and options.tags. You can also set the type to null and only specify options.tags
-     * 
+     *
      * @param {string} type - The type, either this or options.tags is mandatory. To get a list of types, use getImageTypes, as well as getImageTags for a list of tags
      * @param {TophOptions} [options={}] - An object of additional options
      * @memberof Toph
-     * @example 
+     * @example
      * weebSH.toph.getRandomImage('pat')
      *  .then(console.log)
      *  .catch(console.error)
@@ -191,7 +191,7 @@ class Toph extends Base {
 
     /**
      * Get a list of image types and a preview image for each if you want
-     * 
+     *
      * @param {TophOptions} [options={}] - An object of additional options
      * @returns {Promise<ImageTypesResponse>} The parsed response object that you can see here https://docs.weeb.sh/#image-types
      * @example
@@ -210,9 +210,9 @@ class Toph extends Base {
 
     /**
      * Get a list of image tags
-     * 
+     *
      * @param {TophOptions} [options={}] - An object of additional options
-     * @example 
+     * @example
      * weebSH.toph.getImageTags()
      *  .then(console.log)
      *  .catch(console.error)
@@ -229,10 +229,10 @@ class Toph extends Base {
 
     /**
      * Get info about an image using its ID
-     * 
+     *
      * @param {string} id - The ID of the image to get info from
      * @param {TophOptions} [options={}] - An object of additional options
-     * @example 
+     * @example
      * weebSH.toph.getImageInfo('6d875e')
      *  .then(console.log)
      *  .catch(console.error)
@@ -251,11 +251,11 @@ class Toph extends Base {
 
     /**
      * Add tags to an image
-     * @deprecated This endpoint isn't (yet) publicly implemented in weeb.sh 
+     * @deprecated This endpoint isn't (yet) publicly implemented in weeb.sh
      * @param {string} id - The ID of the image to add tags to
-     * @param {array} tags - An array of tags, either strings or {name: 'tag_name'} objects 
+     * @param {array} tags - An array of tags, either strings or {name: 'tag_name'} objects
      * @param {TophOptions} [options={}] - An object of additional options
-     * @example 
+     * @example
      * weebSH.toph.addTagsToImage('6d875e', ['baguette'])
      *  .then(console.log)
      *  .catch(console.error)
@@ -279,11 +279,11 @@ class Toph extends Base {
 
     /**
      * Remove tags from an image
-     * @deprecated This endpoint isn't (yet) publicly implemented in weeb.sh 
+     * @deprecated This endpoint isn't (yet) publicly implemented in weeb.sh
      * @param {String} id - The ID of the image to remove tags from
-     * @param {Array<String>} tags - An array of tags, either strings or {name: 'tag_name'} objects 
+     * @param {Array<String>} tags - An array of tags, either strings or {name: 'tag_name'} objects
      * @param {TophOptions} [options={}] - An object of additional options
-     * @example 
+     * @example
      * weebSH.toph.removeTagsFromImage('6d875e', ['baguette'])
      *  .then(console.log)
      *  .catch(console.error)
@@ -307,10 +307,10 @@ class Toph extends Base {
 
     /**
      * Delete an image
-     * @deprecated This endpoint isn't (yet) publicly implemented in weeb.sh 
+     * @deprecated This endpoint isn't (yet) publicly implemented in weeb.sh
      * @param {string} id - The ID of the image to remove tags from
      * @param {TophOptions} [options={}] - An object of additional options
-     * @example 
+     * @example
      * weebSH.toph.deleteImage('6d875e')
      *  .then(console.log)
      *  .catch(console.error)

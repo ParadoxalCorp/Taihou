@@ -8,15 +8,15 @@ const constants = require('./src/constants.js');
 
 const axios = require('axios');
 
-/** 
- * @typedef {import("./src/Toph/Toph.js").TophOptions} TophOptions
- * @typedef {import("./src/Korra/Korra.js").KorraOptions} KorraOptions
- * @typedef {import("./src/Shimakaze/Shimakaze").ShimakazeOptions} ShimakazeOptions
- * @typedef {import("./src/Tama/Tama.js").TamaOptions} TamaOptions
+/**
+ * @typedef {import('./src/types').TophOptions} TophOptions
+ * @typedef {import('./src/types').KorraOptions} KorraOptions
+ * @typedef {import('./src/types').ShimakazeOptions} ShimakazeOptions
+ * @typedef {import('./src/types').TamaOptions} TamaOptions
  */
 
-/** 
- * @typedef {Object} TaihouOptions 
+/**
+ * @typedef {Object} TaihouOptions
  * @prop {String} baseURL The base URL to use for each request, you may change this if you want to use staging or if you run a local instance (like: 'https://api.weeb.sh')
  * @prop {String} userAgent Strongly recommended, this should follow a BotName/Version/Environment pattern, or at least the bot name
  * @prop {Number} timeout Time in milliseconds before a request should be aborted
@@ -37,8 +37,8 @@ const axios = require('axios');
   /** @typedef {TaihouOptions & PerServicesOptions} ConstructorOptions */
 
 /**
- * 
- * 
+ *
+ *
  * @class Taihou
  * @prop {String} token The token given in the constructor, formatted according to whether it is a wolke token or not
  * @prop {Toph} toph The Toph class - gives access to toph methods
