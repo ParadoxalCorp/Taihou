@@ -8,15 +8,15 @@ const constants = require('./src/constants.js');
 
 const axios = require('axios');
 
-/** 
- * @typedef {import("./src/Toph/Toph.js").TophOptions} TophOptions
- * @typedef {import("./src/Korra/Korra.js").KorraOptions} KorraOptions
- * @typedef {import("./src/Shimakaze/Shimakaze").ShimakazeOptions} ShimakazeOptions
- * @typedef {import("./src/Tama/Tama.js").TamaOptions} TamaOptions
+/**
+ * @typedef {import('./src/Toph/Toph').TophOptions} TophOptions
+ * @typedef {import('./src/Korra/Korra').KorraOptions} KorraOptions
+ * @typedef {import('./src/Shimakaze/Shimakaze').ShimakazeOptions} ShimakazeOptions
+ * @typedef {import('./src/Tama/Tama').TamaOptions} TamaOptions
  */
 
-/** 
- * @typedef {Object} TaihouOptions 
+/**
+ * @typedef {Object} TaihouOptions
  * @prop {String} baseURL The base URL to use for each request, you may change this if you want to use staging or if you run a local instance (like: 'https://api.weeb.sh')
  * @prop {String} userAgent Strongly recommended, this should follow a BotName/Version/Environment pattern, or at least the bot name
  * @prop {Number} timeout Time in milliseconds before a request should be aborted
@@ -24,21 +24,21 @@ const axios = require('axios');
  */
 
  /** @typedef {Object} PerServicesOptions
-  * @prop {TophOptions & TaihouOptions} toph Additional options to pass to Toph
-  * @prop {TophOptions & TaihouOptions} images Additional options to pass to Toph
-  * @prop {KorraOptions & TaihouOptions} korra Additional options to pass to Korra
-  * @prop {KorraOptions & TaihouOptions} imageGeneration Additional options to pass to Korra
-  * @prop {ShimakazeOptions & TaihouOptions} shimakaze Additional options to pass to Shimakaze
-  * @prop {ShimakazeOptions & TaihouOptions} reputation Additional options to pass to Shimakaze
-  * @prop {TamaOptions & TaihouOptions} tama Additional options to pass to Tama
-  * @prop {TamaOptions & TaihouOptions} settings Additional options to pass to Tama
+  * @prop {Partial<TophOptions & TaihouOptions>} toph Additional options to pass to Toph
+  * @prop {Partial<TophOptions & TaihouOptions>} images Additional options to pass to Toph
+  * @prop {Partial<KorraOptions & TaihouOptions>} korra Additional options to pass to Korra
+  * @prop {Partial<KorraOptions & TaihouOptions>} imageGeneration Additional options to pass to Korra
+  * @prop {Partial<ShimakazeOptions & TaihouOptions>} shimakaze Additional options to pass to Shimakaze
+  * @prop {Partial<ShimakazeOptions & TaihouOptions>} reputation Additional options to pass to Shimakaze
+  * @prop {Partial<TamaOptions & TaihouOptions>} tama Additional options to pass to Tama
+  * @prop {Partial<TamaOptions & TaihouOptions>} settings Additional options to pass to Tama
   */
 
-  /** @typedef {TaihouOptions & PerServicesOptions} ConstructorOptions */
+  /** @typedef {Partial<TaihouOptions & PerServicesOptions>} ConstructorOptions */
 
 /**
- * 
- * 
+ *
+ *
  * @class Taihou
  * @prop {String} token The token given in the constructor, formatted according to whether it is a wolke token or not
  * @prop {Toph} toph The Toph class - gives access to toph methods

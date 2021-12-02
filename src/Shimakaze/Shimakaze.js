@@ -3,51 +3,51 @@
 const Base = require('../Base');
 const constants = require('../constants');
 
-/** @typedef {import("../../index").TaihouOptions} TaihouOptions */
+/** @typedef {import('../../index.js').TaihouOptions} TaihouOptions */
 
-/**  
+/**
  * @typedef ShimakazeOptions
  * @prop {Boolean} burst Whether to enable the request handler's burst mode, false by default
  * @prop {Number} requestsPerMinute - Only apply when instantiating the module, regardless of the mode, define how many requests can be done in a minute. 0 makes it limitless
  * @prop {String} botID - The ID of the bot reputation database to access, if you specify it here, you won't need to specify it in every methods. You can always override it by specifying it in the method, note that methods which don't take objects as argument (methods with 2 or fewer parameters) will take the passed arguments count; As in, if the method expect at least 2 arguments (the bot id and something else) and you pass only one argument, it will be assumed that you want to use the botID set in the constructor
  */
 
-/** 
+/**
  * @typedef {Object} KorraRequestOptions
  * @prop {Number} beforeNextRequest - Time in milliseconds before the next request in the queue should be executed. Is ignored if burst mode is enabled
  */
 
 /** @typedef {TaihouOptions & KorraRequestOptions} RequestOptions */
 
-/**  
+/**
  * @typedef GiveReputationOptions
  * @prop {String} botID - The ID of the bot reputation database to use
- * @prop {String} targetID - The ID of the user to give reputation to 
+ * @prop {String} targetID - The ID of the user to give reputation to
  * @prop {String} sourceID - The ID of the user who is giving reputation
  */
 
-/**  
+/**
  * @typedef ResetUserReputationOptions
  * @prop {String} botID - The ID of the bot reputation database to use
  * @prop {String} targetID - The ID of the user to reset
  * @prop {Boolean} [resetCooldown=false] - Whether to reset the user cooldown field too, false by default
  */
 
-/**  
+/**
  * @typedef IncreaseUserReputationOptions
  * @prop {String} botID - The ID of the bot reputation database to use
  * @prop {String} targetID - The ID of the user who should get their reputation increased
  * @prop {Number} increase - By how much should the user reputation be increased
  */
 
-/**  
+/**
  * @typedef DecreaseUserReputationOptions
  * @prop {String} botID - The ID of the bot reputation database to use
  * @prop {String} targetID - The ID of the user from who's reputation should be decreased
  * @prop {Number} decrease - By how much should the user reputation be decreased
  */
 
-/**  
+/**
  * @typedef ReputationSettings
  * @prop {Number} [reputationPerDay] - The maximum reputation a user can give per **reputationCooldown** (so per day by default)
  * @prop {Number} [maximumReputation] - The maximum reputation a user can ever have (there is no maximum by default)
@@ -66,20 +66,20 @@ const constants = require('../constants');
   * @prop {Array<Number>} [nextAvailableReputations] Array of timestamps referring to the remaining cooldown time until the user can give out reputation from now, this field is optional and may not always be present
   */
 
-/**  
+/**
  * @typedef {Object} GetReputationResponse
  * @prop {String} date Current server time in UTC
  * @prop {Number} status The HTTP status code of the request
  * @prop {UserReputationObject} user The user's reputation object with all optional fields
  */
 
- /**  
+ /**
  * @typedef {Object} ReputationResponse
  * @prop {UserReputationObject} user The user's reputation object without the optional fields
  * @prop {Number} status The HTTP status code of the request
  */
 
- /** 
+ /**
  * @typedef {Object} GiveReputationResponse
  * @prop {Number} status The HTTP status code of the request
  * @prop {String} date Current server time in UTC
@@ -89,7 +89,7 @@ const constants = require('../constants');
  * @prop {UserReputationObject} targetUser The reputation object of the user who received the reputation, without the optional fields
  */
 
- /**  
+ /**
  * @typedef {Object} ReputationSettingsResponse
  * @prop {Number} reputationPerDay The maximum reputation a user can give per **reputationCooldown** (so per day by default)
  * @prop {Number} maximumReputation The maximum reputation a user can ever have (there is no maximum by default)
@@ -98,15 +98,15 @@ const constants = require('../constants');
  * @prop {String} accountId Internal id associated with the token calling the API
  */
 
- /** 
-  * @typedef {Object} SettingsResponse 
+ /**
+  * @typedef {Object} SettingsResponse
   * @prop {Number} status The HTTP status code of the request
   * @prop {ReputationSettingsResponse} settings The settings
   */
- 
+
 /**
- * 
- * 
+ *
+ *
  * @class Shimakaze
  * @prop {String} token The token given in the constructor of Taihou, formatted according to whether it is a wolke token or not
  * @prop {TaihouOptions & ShimakazeOptions} options The **effective** options; e.g, if you specified options specific to Shimakaze, those override the base ones
@@ -132,14 +132,14 @@ class Shimakaze extends Base {
 
     /**
      * Make a simple request to check whether Shimakaze is available or not, due to its nature, this method never rejects
-     * 
+     *
      * @param {RequestOptions} [options={}] An optional object of options
      * @memberof Shimakaze
-     * @example 
+     * @example
      * weebSH.shimakaze.getStatus()
      *  .then(console.log)
      *  .catch(console.error)
-     * @returns {Promise<Boolean>} Whether or not Shimakaze is online 
+     * @returns {Promise<Boolean>} Whether or not Shimakaze is online
      */
     async getStatus(options = {}) {
         options = Object.assign({ ...this.options
@@ -151,11 +151,11 @@ class Shimakaze extends Base {
 
     /**
      * Get the reputation of a user
-     * 
+     *
      * @param {String} botID - The ID of the bot reputation database to access
      * @param {String} targetID - The ID of the user to get reputation of
      * @param {RequestOptions} [options={}] An additional object of options
-     * @example 
+     * @example
      * weebSH.shimakaze.getUserReputation('327144735359762432', '184051394179891201')
      *  .then(console.log)
      *  .catch(console.error)
@@ -180,7 +180,7 @@ class Shimakaze extends Base {
      * Note that you should catch the rejection of this request and inspect the error.response.data.code property of the response to determine the exact reason why it failed
      * @param {GiveReputationOptions} reputationOptions An object of options
      * @param {RequestOptions} [options={}] An additional object of options
-     * @example 
+     * @example
      * weebSH.shimakaze.postUserReputation({botID: '184051394179891201', targetID: '128392910574977024', sourceID: '140149699486154753'})
      *  .then(console.log)
      *  .catch(console.error)
@@ -204,10 +204,10 @@ class Shimakaze extends Base {
 
     /**
      * Reset the reputation of a user
-     * 
+     *
      * @param {ResetUserReputationOptions} resetOptions An object of options
      * @param {RequestOptions} [options={}] An additional object of options
-     * @example 
+     * @example
      * weebSH.shimakaze.resetUserReputation({botID: '327144735359762432', targetID: '184051394179891201'})
      *  .then(console.log)
      *  .catch(console.error)
@@ -233,10 +233,10 @@ class Shimakaze extends Base {
 
     /**
      * Increase the reputation of a user
-     * 
+     *
      * @param {IncreaseUserReputationOptions} increaseOptions An object of options
      * @param {RequestOptions} [options={}] An additional object of options
-     * @example 
+     * @example
      * weebSH.shimakaze.increaseUserReputation({botID: '327144735359762432', targetID: '184051394179891201', increase: 1})
      *  .then(console.log)
      *  .catch(console.error)
@@ -260,10 +260,10 @@ class Shimakaze extends Base {
 
     /**
      * Decrease the reputation of a user
-     * 
+     *
      * @param {DecreaseUserReputationOptions} decreaseOptions An object of options
      * @param {RequestOptions} [options={}] An additional object of options
-     * @example 
+     * @example
      * weebSH.shimakaze.decreaseUserReputation({botID: '327144735359762432', targetID: '184051394179891201', decrease: 1})
      *  .then(console.log)
      *  .catch(console.error)
@@ -287,9 +287,9 @@ class Shimakaze extends Base {
 
     /**
      * Get the current settings
-     * 
+     *
      * @param {RequestOptions} [options={}] An additional object of options
-     * @example 
+     * @example
      * weebSH.shimakaze.getSettings()
      *  .then(console.log)
      *  .catch(console.error)
@@ -304,10 +304,10 @@ class Shimakaze extends Base {
 
     /**
      * Update the current settings
-     * 
+     *
      * @param {ReputationSettings} settings - The settings to update
      * @param {RequestOptions} [options={}] An additional object of options
-     * @example 
+     * @example
      * weebSH.shimakaze.setSettings({reputationPerDay: 3})
      *  .then(console.log)
      *  .catch(console.error)

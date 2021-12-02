@@ -1,12 +1,8 @@
-'use strict';
-
-const Base = require('../Base');
-const constants = require('../constants');
+export = Toph;
 /**
  * @typedef {import('../../index.js').TaihouOptions} TaihouOptions
  * @typedef {import('axios').AxiosInstance} Axios
  */
-
 /**
  * @typedef {Object} TophOptions
  * @prop {Boolean} nsfw Either a boolean or "only", false entirely filters nsfw, true gets both nsfw and non-nsfw, and "only" gets only nsfw. False by default
@@ -18,7 +14,6 @@ const constants = require('../constants');
  * @prop {Number} beforeNextRequest Only apply per-request, time in milliseconds before the next request in the queue should be executed. Is ignored if burst mode is enabled
  * @prop {Number} requestsPerMinute Only apply when instantiating the module, regardless of the mode, define how many requests can be done in a minute. 0 makes it limitless
  */
-
 /**
  * @typedef {Object} UploadOptions
  * @prop {String} file Absolute path to a file, takes priority over url argument
@@ -29,7 +24,6 @@ const constants = require('../constants');
  * @prop {String} tags Comma-separated list of tags to add to the image, they will inherit the hidden property of the image
  * @prop {String} source Url pointing to the original source of the image
  */
-
 /** @typedef {Object} ImageInfo
  * @prop {String} id The ID of the image
  * @prop {String} type The type of the image
@@ -43,7 +37,6 @@ const constants = require('../constants');
  * @prop {String} account The ID of the account that uploaded this image
  * @prop {String} [source] The source url of the image, if any
  */
-
 /** @typedef {Object} PreviewImageInfo
  * @prop {String} url The direct URL to the image
  * @prop {String} id The ID of the image
@@ -51,24 +44,20 @@ const constants = require('../constants');
  * @prop {String} baseType The base type of the image
  * @prop {String} type The type of the image
  */
-
 /**
  * @typedef {Object} UploadResponse
  * @prop {Number} status The HTTP status code of the request
  * @prop {ImageInfo} file The uploaded image info
  */
-
 /** @typedef {Object} ImageTypesResponse
  * @prop {String} status The HTTP status code of the request
  * @prop {Array<String>} types An array listing all the existing types
  * @prop {Array<PreviewImageInfo>} [preview] An array containing previews for each types, unless preview wasn't requested
  */
-
- /** @typedef {Object} ImageTagsResponse
- * @prop {String} status The HTTP status code of the request
- * @prop {Array<String>} tags An array listing all the existing tags
- */
-
+/** @typedef {Object} ImageTagsResponse
+* @prop {String} status The HTTP status code of the request
+* @prop {Array<String>} tags An array listing all the existing tags
+*/
 /**
  *
  *
@@ -76,34 +65,17 @@ const constants = require('../constants');
  * @prop {String} token The token given in the constructor of Taihou, formatted according to whether it is a wolke token or not
  * @prop {TaihouOptions & TophOptions} options The **effective** options; e.g, if you specified options specific to Toph, those override the base ones
  */
-
-class Toph extends Base {
+declare class Toph extends Base {
     /**
      *
      * @param {String} token - The token
      * @param {TaihouOptions & TophOptions} options - The options for this instance
      * @param {Axios} axios - The axios instance
      */
-
-    constructor(token, options, axios) {
-        super(options);
-        this.token = token;
-        this.options = options.toph || options.images ? Object.assign({ ...options
-        }, options.toph || options.images) : options;
-        this.options.requestsPerMinute = this.options.requestsPerMinute || constants.toph.requestsPerMinute;
-        this.axios = axios;
-        //As we heavily rely on this, ensure it is always bound to all methods regardless of the context
-        this.getStatus = this.getStatus.bind(this);
-        this.uploadImage = this.uploadImage.bind(this);
-        this.getRandomImage = this.getRandomImage.bind(this);
-        this.getImageTypes = this.getImageTypes.bind(this);
-        this.getImageTags = this.getImageTags.bind(this);
-        this.getImageInfo = this.getImageInfo.bind(this);
-        this.addTagsToImage = this.addTagsToImage.bind(this);
-        this.removeTagsFromImage = this.removeTagsFromImage.bind(this);
-        this.deleteImage = this.deleteImage.bind(this);
-    }
-
+    constructor(token: string, options: TaihouOptions & TophOptions, axios: Axios);
+    token: string;
+    options: any;
+    axios: import("axios").AxiosInstance;
     /**
      * Make a simple request to check whether Toph is available or not, due to its nature, this method never rejects
      *
@@ -114,14 +86,7 @@ class Toph extends Base {
      *  .then(console.log)
      * @returns {Promise<Boolean>} Whether or not Toph is online
      */
-    getStatus(options = {}) {
-            options = Object.assign({ ...this.options
-            }, options);
-            return this._status(`${options.baseURL}${constants.endpoints.GET_TOPH_STATUS}`, options)
-                .then(res => res.request.res.statusCode === 200 ? true : false)
-                .catch(() => false);
-
-    }
+    getStatus(options?: TophOptions): Promise<boolean>;
     /**
      * Upload an image to Toph
      *
@@ -134,33 +99,7 @@ class Toph extends Base {
      * @returns {Promise<UploadResponse>} An image object with a file key
      * @memberof Toph
      */
-    async uploadImage(uploadOptions = {}, options = {}) {
-            options = Object.assign({ ...this.options
-            }, options);
-            if ((typeof uploadOptions.file !== 'string' && typeof uploadOptions.url !== 'string') || typeof uploadOptions.baseType !== 'string') {
-                return Promise.reject(new Error('At least either the uploadOptions.file or the uploadOptions.url and the uploadOptions.baseType parameters are required'));
-            }
-            if (uploadOptions.file) {
-                await this._readFileAsync(uploadOptions.file)
-                    .then(buffer => {
-                        uploadOptions.file = buffer;
-                        if (typeof options.headers === 'object') {
-                            options.headers['Content-Type'] = 'multipart/form-data';
-                        } else {
-                            options.headers = {
-                                'Content-Type': 'multipart/form-data'
-                            };
-                        }
-                    })
-                    .catch(err => {
-                        return Promise.reject(err);
-                    });
-            }
-            options.data = uploadOptions;
-            this.requestHandler.queueRequest(this._formatRequest(`${options.baseURL}${constants.endpoints.UPLOAD_IMAGE}`, 'post', options), options)
-                .then(res => res.data);
-    }
-
+    uploadImage(uploadOptions?: UploadOptions, options?: TophOptions): Promise<UploadResponse>;
     /**
      * Get a random image from weeb.sh, you can specify both type and options.tags. You can also set the type to null and only specify options.tags
      *
@@ -173,22 +112,7 @@ class Toph extends Base {
      *  .catch(console.error)
      * @returns {Promise<ImageInfo>} The parsed image object, refer to https://docs.weeb.sh/#random-image for its structure
      */
-    getRandomImage(type, options = {}) {
-        options = Object.assign({ ...this.options
-        }, options);
-        if (!type && !options.tags) {
-            throw new Error('Either the type or options.tags parameter is mandatory');
-        }
-        if (options.tags) {
-            options.tags = options.tags.replace(/\s+/gi, '');
-        }
-        options.params = this._addURLParams({
-            type
-        }, ['nsfw', 'tags', 'hidden', 'filetype'], options);
-        return this.requestHandler.queueRequest(this._formatRequest(`${options.baseURL}${constants.endpoints.GET_RANDOM_IMAGE}`, 'get', options), options)
-            .then(res => res.data);
-    }
-
+    getRandomImage(type: string, options?: TophOptions): Promise<ImageInfo>;
     /**
      * Get a list of image types and a preview image for each if you want
      *
@@ -200,14 +124,7 @@ class Toph extends Base {
      *  .catch(console.error)
      * @memberof Toph
      */
-    getImageTypes(options = {}) {
-            options = Object.assign({ ...this.options
-            }, options);
-            options.params = this._addURLParams({}, ['nsfw', 'hidden', 'preview'], options);
-            return this.requestHandler.queueRequest(this._formatRequest(`${options.baseURL}${constants.endpoints.GET_IMAGE_TYPES}`, 'get', options), options)
-                .then(res => res.data);
-    }
-
+    getImageTypes(options?: TophOptions): Promise<ImageTypesResponse>;
     /**
      * Get a list of image tags
      *
@@ -219,14 +136,7 @@ class Toph extends Base {
      * @returns {Promise<ImageTagsResponse>} The parsed response object that you can see here https://docs.weeb.sh/#image-tags
      * @memberof Toph
      */
-    getImageTags(options = {}) {
-            options = Object.assign({ ...this.options
-            }, options);
-            options.params = this._addURLParams({}, ['hidden', 'nsfw'], options);
-            return this.requestHandler.queueRequest(this._formatRequest(`${options.baseURL}${constants.endpoints.GET_IMAGE_TAGS}`, 'get', options), options)
-                .then(res => res.data);
-    }
-
+    getImageTags(options?: TophOptions): Promise<ImageTagsResponse>;
     /**
      * Get info about an image using its ID
      *
@@ -239,16 +149,7 @@ class Toph extends Base {
      * @returns {Promise<ImageInfo>} The parsed response object that you can see here https://docs.weeb.sh/#image-info
      * @memberof Toph
      */
-    getImageInfo(id, options = {}) {
-            if (!id) {
-                throw new Error('The ID is mandatory');
-            }
-            options = Object.assign({ ...this.options
-            }, options);
-            return this.requestHandler.queueRequest(this._formatRequest(`${options.baseURL}${constants.endpoints.GET_IMAGE_INFO(id)}`, 'get', options), options)
-                .then(res => res.data);
-    }
-
+    getImageInfo(id: string, options?: TophOptions): Promise<ImageInfo>;
     /**
      * Add tags to an image
      * @deprecated This endpoint isn't (yet) publicly implemented in weeb.sh
@@ -262,21 +163,7 @@ class Toph extends Base {
      * @returns {Promise<any>} An object detailing added and skipped tags
      * @memberof Toph
      */
-    addTagsToImage(id, tags, options = {}) {
-            if (!id) {
-                throw new Error('The image ID is mandatory');
-            } else if (!tags || !Array.isArray(tags)) {
-                throw new Error('The tags to add must be an array of strings');
-            }
-            options = Object.assign({ ...this.options
-            }, options);
-            options.data = {
-                tags: tags
-            };
-            return this.requestHandler.queueRequest(this._formatRequest(`${options.baseURL}${constants.endpoints.ADD_TAGS_TO_IMAGE(id)}`, 'post', options), options)
-                .then(res => res.data);
-    }
-
+    addTagsToImage(id: string, tags: any[], options?: TophOptions): Promise<any>;
     /**
      * Remove tags from an image
      * @deprecated This endpoint isn't (yet) publicly implemented in weeb.sh
@@ -290,21 +177,7 @@ class Toph extends Base {
      * @returns {Promise<any>} The returned data
      * @memberof Toph
      */
-    removeTagsFromImage(id, tags, options = {}) {
-            if (!id) {
-                throw new Error('The image ID is mandatory');
-            } else if (!tags || !Array.isArray(tags)) {
-                throw new Error('The tags to add must be an array of strings');
-            }
-            options = Object.assign({ ...this.options
-            }, options);
-            options.data = {
-                tags: tags
-            };
-            return this.requestHandler.queueRequest(this._formatRequest(`${options.baseURL}${constants.endpoints.REMOVE_TAGS_FROM_IMAGE(id)}`, 'delete', options), options)
-                .then(res => res.data);
-    }
-
+    removeTagsFromImage(id: string, tags: Array<string>, options?: TophOptions): Promise<any>;
     /**
      * Delete an image
      * @deprecated This endpoint isn't (yet) publicly implemented in weeb.sh
@@ -317,15 +190,177 @@ class Toph extends Base {
      * @returns {Promise<any>} An object containing a success confirmation
      * @memberof Toph
      */
-    deleteImage(id, options = {}) {
-            if (!id) {
-                throw new Error('The image ID is mandatory');
-            }
-            options = Object.assign({ ...this.options
-            }, options);
-            return this.requestHandler.queueRequest(this._formatRequest(`${options.baseURL}${constants.endpoints.DELETE_IMAGE(id)}`, 'delete', options), options)
-                .then(res => res.data);
-    }
+    deleteImage(id: string, options?: TophOptions): Promise<any>;
 }
-
-module.exports = Toph;
+declare namespace Toph {
+    export { TaihouOptions, Axios, TophOptions, UploadOptions, ImageInfo, PreviewImageInfo, UploadResponse, ImageTypesResponse, ImageTagsResponse };
+}
+import Base = require("../Base");
+type TophOptions = {
+    /**
+     * Either a boolean or "only", false entirely filters nsfw, true gets both nsfw and non-nsfw, and "only" gets only nsfw. False by default
+     */
+    nsfw: boolean;
+    /**
+     * If true, you only get back hidden images you uploaded. Defaults to false
+     */
+    hidden: boolean;
+    /**
+     * Only apply to getImageTypes(), if true, a preview image image is sent along. Defaults to false
+     */
+    preview: boolean;
+    /**
+     * Only apply to getRandomImage(), can be "jpeg", "gif" or "png"
+     */
+    fileType: string;
+    /**
+     * Only apply to getRandomImage(), a comma-separated list of tags the image should have
+     */
+    tags: string;
+    /**
+     * Whether to enable the request handler's burst mode, false by default
+     */
+    burst: boolean;
+    /**
+     * Only apply per-request, time in milliseconds before the next request in the queue should be executed. Is ignored if burst mode is enabled
+     */
+    beforeNextRequest: number;
+    /**
+     * Only apply when instantiating the module, regardless of the mode, define how many requests can be done in a minute. 0 makes it limitless
+     */
+    requestsPerMinute: number;
+};
+type UploadOptions = {
+    /**
+     * Absolute path to a file, takes priority over url argument
+     */
+    file: string;
+    /**
+     * Url pointing directly at the image you want to upload, you may only use file or url
+     */
+    url: string;
+    /**
+     * The type of the image; e.g, the category (pat, cuddle and such)
+     */
+    baseType: string;
+    /**
+     * Whether the uploaded image should be private or not
+     */
+    hidden: boolean;
+    /**
+     * Whether this image has content that could be considered NSFW (not safe for work)
+     */
+    nsfw: boolean;
+    /**
+     * Comma-separated list of tags to add to the image, they will inherit the hidden property of the image
+     */
+    tags: string;
+    /**
+     * Url pointing to the original source of the image
+     */
+    source: string;
+};
+type UploadResponse = {
+    /**
+     * The HTTP status code of the request
+     */
+    status: number;
+    /**
+     * The uploaded image info
+     */
+    file: ImageInfo;
+};
+type ImageInfo = {
+    /**
+     * The ID of the image
+     */
+    id: string;
+    /**
+     * The type of the image
+     */
+    type: string;
+    /**
+     * The base type of the image
+     */
+    baseType: string;
+    /**
+     * Whether the image is NSFW (Not Safe For Work)
+     */
+    nsfw: boolean;
+    /**
+     * The type of the file ("gif", "png"...)
+     */
+    fileType: string;
+    /**
+     * The mime type of the file
+     */
+    mimeType: string;
+    /**
+     * An array of tags associated to this image
+     */
+    tags: Array<string>;
+    /**
+     * The direct URL to the image
+     */
+    url: string;
+    /**
+     * Whether the image is hidden
+     */
+    hidden: boolean;
+    /**
+     * The ID of the account that uploaded this image
+     */
+    account: string;
+    /**
+     * The source url of the image, if any
+     */
+    source?: string;
+};
+type ImageTypesResponse = {
+    /**
+     * The HTTP status code of the request
+     */
+    status: string;
+    /**
+     * An array listing all the existing types
+     */
+    types: Array<string>;
+    /**
+     * An array containing previews for each types, unless preview wasn't requested
+     */
+    preview?: Array<PreviewImageInfo>;
+};
+type ImageTagsResponse = {
+    /**
+     * The HTTP status code of the request
+     */
+    status: string;
+    /**
+     * An array listing all the existing tags
+     */
+    tags: Array<string>;
+};
+type TaihouOptions = import('../../index.js').TaihouOptions;
+type Axios = import('axios').AxiosInstance;
+type PreviewImageInfo = {
+    /**
+     * The direct URL to the image
+     */
+    url: string;
+    /**
+     * The ID of the image
+     */
+    id: string;
+    /**
+     * The type of the file ("gif", "png"...)
+     */
+    fileType: string;
+    /**
+     * The base type of the image
+     */
+    baseType: string;
+    /**
+     * The type of the image
+     */
+    type: string;
+};
