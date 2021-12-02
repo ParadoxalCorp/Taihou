@@ -9,85 +9,90 @@ const constants = require('../constants');
 
 /**
  * @typedef {Object} TophOptions
- * @prop {Boolean} nsfw Either a boolean or "only", false entirely filters nsfw, true gets both nsfw and non-nsfw, and "only" gets only nsfw. False by default
- * @prop {Boolean} hidden If true, you only get back hidden images you uploaded. Defaults to false
- * @prop {Boolean} preview Only apply to getImageTypes(), if true, a preview image image is sent along. Defaults to false
- * @prop {String} fileType Only apply to getRandomImage(), can be "jpeg", "gif" or "png"
- * @prop {String} tags Only apply to getRandomImage(), a comma-separated list of tags the image should have
- * @prop {Boolean} burst Whether to enable the request handler's burst mode, false by default
- * @prop {Number} beforeNextRequest Only apply per-request, time in milliseconds before the next request in the queue should be executed. Is ignored if burst mode is enabled
- * @prop {Number} requestsPerMinute Only apply when instantiating the module, regardless of the mode, define how many requests can be done in a minute. 0 makes it limitless
+ * @prop {boolean} nsfw Either a boolean or "only", false entirely filters nsfw, true gets both nsfw and non-nsfw, and "only" gets only nsfw. False by default
+ * @prop {boolean} hidden If true, you only get back hidden images you uploaded. Defaults to false
+ * @prop {boolean} preview Only apply to getImageTypes(), if true, a preview image image is sent along. Defaults to false
+ * @prop {string} fileType Only apply to getRandomImage(), can be "jpeg", "gif" or "png"
+ * @prop {string} tags Only apply to getRandomImage(), a comma-separated list of tags the image should have
+ * @prop {boolean} burst Whether to enable the request handler's burst mode, false by default
+ * @prop {number} beforeNextRequest Only apply per-request, time in milliseconds before the next request in the queue should be executed. Is ignored if burst mode is enabled
+ * @prop {number} requestsPerMinute Only apply when instantiating the module, regardless of the mode, define how many requests can be done in a minute. 0 makes it limitless
  */
 
 /**
  * @typedef {Object} UploadOptions
- * @prop {String} file Absolute path to a file, takes priority over url argument
- * @prop {String} url Url pointing directly at the image you want to upload, you may only use file or url
- * @prop {String} baseType The type of the image; e.g, the category (pat, cuddle and such)
- * @prop {Boolean} hidden Whether the uploaded image should be private or not
- * @prop {Boolean} nsfw Whether this image has content that could be considered NSFW (not safe for work)
- * @prop {String} tags Comma-separated list of tags to add to the image, they will inherit the hidden property of the image
- * @prop {String} source Url pointing to the original source of the image
+ * @prop {string} file Absolute path to a file, takes priority over url argument
+ * @prop {string} url Url pointing directly at the image you want to upload, you may only use file or url
+ * @prop {string} baseType The type of the image; e.g, the category (pat, cuddle and such)
+ * @prop {boolean} hidden Whether the uploaded image should be private or not
+ * @prop {boolean} nsfw Whether this image has content that could be considered NSFW (not safe for work)
+ * @prop {string} tags Comma-separated list of tags to add to the image, they will inherit the hidden property of the image
+ * @prop {string} source Url pointing to the original source of the image
  */
 
-/** @typedef {Object} ImageInfo
- * @prop {String} id The ID of the image
- * @prop {String} type The type of the image
- * @prop {String} baseType The base type of the image
- * @prop {Boolean} nsfw Whether the image is NSFW (Not Safe For Work)
- * @prop {String} fileType The type of the file ("gif", "png"...)
- * @prop {String} mimeType The mime type of the file
- * @prop {Array<String>} tags An array of tags associated to this image
- * @prop {String} url The direct URL to the image
- * @prop {Boolean} hidden Whether the image is hidden
- * @prop {String} account The ID of the account that uploaded this image
- * @prop {String} [source] The source url of the image, if any
+/**
+ * @typedef {Object} ImageInfo
+ * @prop {string} id The ID of the image
+ * @prop {string} type The type of the image
+ * @prop {string} baseType The base type of the image
+ * @prop {boolean} nsfw Whether the image is NSFW (Not Safe For Work)
+ * @prop {string} fileType The type of the file ("gif", "png"...)
+ * @prop {string} mimeType The mime type of the file
+ * @prop {Array<string>} tags An array of tags associated to this image
+ * @prop {string} url The direct URL to the image
+ * @prop {boolean} hidden Whether the image is hidden
+ * @prop {string} account The ID of the account that uploaded this image
+ * @prop {string} [source] The source url of the image, if any
  */
 
-/** @typedef {Object} PreviewImageInfo
- * @prop {String} url The direct URL to the image
- * @prop {String} id The ID of the image
- * @prop {String} fileType The type of the file ("gif", "png"...)
- * @prop {String} baseType The base type of the image
- * @prop {String} type The type of the image
+/**
+ * @typedef {Object} PreviewImageInfo
+ * @prop {string} url The direct URL to the image
+ * @prop {string} id The ID of the image
+ * @prop {string} fileType The type of the file ("gif", "png"...)
+ * @prop {string} baseType The base type of the image
+ * @prop {string} type The type of the image
  */
 
 /**
  * @typedef {Object} UploadResponse
- * @prop {Number} status The HTTP status code of the request
+ * @prop {number} status The HTTP status code of the request
  * @prop {ImageInfo} file The uploaded image info
  */
 
-/** @typedef {Object} ImageTypesResponse
- * @prop {String} status The HTTP status code of the request
- * @prop {Array<String>} types An array listing all the existing types
+/**
+ * @typedef {Object} ImageTypesResponse
+ * @prop {string} status The HTTP status code of the request
+ * @prop {Array<string>} types An array listing all the existing types
  * @prop {Array<PreviewImageInfo>} [preview] An array containing previews for each types, unless preview wasn't requested
  */
 
- /** @typedef {Object} ImageTagsResponse
- * @prop {String} status The HTTP status code of the request
- * @prop {Array<String>} tags An array listing all the existing tags
+/**
+ * @typedef {Object} ImageTagsResponse
+ * @prop {string} status The HTTP status code of the request
+ * @prop {Array<string>} tags An array listing all the existing tags
  */
 
 /**
- *
- *
  * @class Toph
- * @prop {String} token The token given in the constructor of Taihou, formatted according to whether it is a wolke token or not
- * @prop {TaihouOptions & TophOptions} options The **effective** options; e.g, if you specified options specific to Toph, those override the base ones
  */
-
 class Toph extends Base {
     /**
-     *
-     * @param {String} token - The token
+     * @param {string} token - The token
      * @param {TaihouOptions & TophOptions} options - The options for this instance
      * @param {Axios} axios - The axios instance
      */
-
     constructor(token, options, axios) {
         super(options);
+        /**
+         * The token given in the constructor of Taihou, formatted according to whether it is a wolke token or not
+         * @type {string}
+         */
         this.token = token;
+        /**
+         * The **effective** options; e.g, if you specified options specific to Toph, those override the base ones
+         * @type {TaihouOptions & TophOptions}
+         */
         this.options = options.toph || options.images ? Object.assign({ ...options
         }, options.toph || options.images) : options;
         this.options.requestsPerMinute = this.options.requestsPerMinute || constants.toph.requestsPerMinute;
@@ -112,7 +117,7 @@ class Toph extends Base {
      * @example
      * weebSH.toph.getStatus()
      *  .then(console.log)
-     * @returns {Promise<Boolean>} Whether or not Toph is online
+     * @returns {Promise<boolean>} Whether or not Toph is online
      */
     getStatus(options = {}) {
             options = Object.assign({ ...this.options
@@ -251,9 +256,10 @@ class Toph extends Base {
 
     /**
      * Add tags to an image
+     *
      * @deprecated This endpoint isn't (yet) publicly implemented in weeb.sh
      * @param {string} id - The ID of the image to add tags to
-     * @param {array} tags - An array of tags, either strings or {name: 'tag_name'} objects
+     * @param {Array<string|{name:string}>} tags - An array of tags, either strings or {name: 'tag_name'} objects
      * @param {TophOptions} [options={}] - An object of additional options
      * @example
      * weebSH.toph.addTagsToImage('6d875e', ['baguette'])
@@ -279,9 +285,10 @@ class Toph extends Base {
 
     /**
      * Remove tags from an image
+     *
      * @deprecated This endpoint isn't (yet) publicly implemented in weeb.sh
-     * @param {String} id - The ID of the image to remove tags from
-     * @param {Array<String>} tags - An array of tags, either strings or {name: 'tag_name'} objects
+     * @param {string} id - The ID of the image to remove tags from
+     * @param {Array<string|{name:string}>} tags - An array of tags, either strings or {name: 'tag_name'} objects
      * @param {TophOptions} [options={}] - An object of additional options
      * @example
      * weebSH.toph.removeTagsFromImage('6d875e', ['baguette'])
@@ -307,6 +314,7 @@ class Toph extends Base {
 
     /**
      * Delete an image
+     *
      * @deprecated This endpoint isn't (yet) publicly implemented in weeb.sh
      * @param {string} id - The ID of the image to remove tags from
      * @param {TophOptions} [options={}] - An object of additional options

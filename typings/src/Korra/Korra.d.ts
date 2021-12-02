@@ -2,45 +2,48 @@ export = Korra;
 /** @typedef {import('../../index.js').TaihouOptions} TaihouOptions */
 /**
  * @typedef KorraOptions
- * @prop {Boolean} burst Whether to enable the request handler's burst mode, false by default
- * @prop {Number} requestsPerMinute - Only apply when instantiating the module, regardless of the mode, define how many requests can be done in a minute. 0 makes it limitless
+ * @prop {boolean} burst Whether to enable the request handler's burst mode, false by default
+ * @prop {number} requestsPerMinute - Only apply when instantiating the module, regardless of the mode, define how many requests can be done in a minute. 0 makes it limitless
  */
 /**
  * @typedef {Object} KorraRequestOptions
- * @prop {Number} beforeNextRequest - Time in milliseconds before the next request in the queue should be executed. Is ignored if burst mode is enabled
+ * @prop {number} beforeNextRequest - Time in milliseconds before the next request in the queue should be executed. Is ignored if burst mode is enabled
  */
 /** @typedef {TaihouOptions & KorraRequestOptions} RequestOptions */
 /**
  * @typedef LicenseOptions
- * @prop {String} title - The title of the license
- * @prop {String} avatar - Direct URL to an image
- * @prop {Array<String>} [badges] - Array of http/s links directly pointing to images; to see how it renders, check https://docs.weeb.sh/#license-generation
- * @prop {Array<String>} [widgets] - An array of strings to fill the boxes
+ * @prop {string} title - The title of the license
+ * @prop {string} avatar - Direct URL to an image
+ * @prop {Array<string>} [badges] - Array of http/s links directly pointing to images; to see how it renders, check https://docs.weeb.sh/#license-generation
+ * @prop {Array<string>} [widgets] - An array of strings to fill the boxes
  */
 /**
  * @typedef SimpleOptions
- * @prop {String} [face] - Only for awooo type; HEX color code of the face
- * @prop {String} [hair] - Only for awooo type; HEX color code of the hairs
+ * @prop {string} [face] - Only for awooo type; HEX color code of the face
+ * @prop {string} [hair] - Only for awooo type; HEX color code of the hairs
  */
 /**
- *
- *
  * @class Korra
- * @prop {String} token The token given in the constructor of Taihou, formatted according to whether it is a wolke token or not
- * @prop {TaihouOptions & KorraOptions} options The **effective** options; e.g, if you specified options specific to Korra, those override the base ones
  */
 declare class Korra extends Base {
     /**
      * Creates an instance of Korra.
-     * @param {String} token - The token
+     * @param {string} token - The token
      * @param {TaihouOptions & KorraOptions} options - The options
-     * @param {any} axios - The axios instance
+     * @param {import("axios").AxiosInstance} axios - The axios instance
      * @memberof Korra
      */
-    constructor(token: string, options: TaihouOptions & KorraOptions, axios: any);
+    constructor(token: string, options: TaihouOptions & KorraOptions, axios: import("axios").AxiosInstance);
+    /**
+     * The token given in the constructor of Taihou, formatted according to whether it is a wolke token or not
+     * @type {string}
+     */
     token: string;
-    options: any;
-    axios: any;
+    /**
+     * The **effective** options; e.g, if you specified options specific to Korra, those override the base ones
+     * @type {TaihouOptions & KorraOptions}
+     */
+    options: TaihouOptions & KorraOptions;
     /**
      * Make a simple request to check whether Korra is available or not, due to its nature, this method never rejects
      *
@@ -50,12 +53,11 @@ declare class Korra extends Base {
      * weebSH.korra.getStatus()
      *  .then(console.log)
      *  .catch(console.error)
-     * @returns {Promise<Boolean>} Whether or not Korra is online
+     * @returns {Promise<boolean>} Whether or not Korra is online
      */
     getStatus(options?: RequestOptions): Promise<boolean>;
     /**
-     *
-     * @param {String} type One of the available types, you can see them here: https://docs.weeb.sh/#generate-simple
+     * @param {string} type One of the available types, you can see them here: https://docs.weeb.sh/#generate-simple
      * @param {SimpleOptions} [simpleOptions] An object of options for this generation, for a complete list of options you can use, check: https://docs.weeb.sh/#generate-simple
      * @param {RequestOptions} [options={}] An additional object of options
      * @example
@@ -66,9 +68,8 @@ declare class Korra extends Base {
      */
     generateSimple(type: string, simpleOptions?: SimpleOptions, options?: RequestOptions): Promise<Buffer>;
     /**
-     *
-     * @param {String} status - The status, can be either "online", "idle", "streaming", "dnd" or "offline"
-     * @param {String} avatar - The direct URL to the image
+     * @param {string} status - The status, can be either "online", "idle", "streaming", "dnd" or "offline"
+     * @param {string} avatar - The direct URL to the image
      * @param {RequestOptions} [options={}] An additional object of options
      * @example
      * weebSH.korra.generateDiscordStatus('online', 'https://cdn.discordapp.com/avatars/140149699486154753/a_211d333073a63b3adfd13943268fc7a1.webp?size=1024')
@@ -78,7 +79,6 @@ declare class Korra extends Base {
      */
     generateDiscordStatus(status: string, avatar: string, options?: RequestOptions): Promise<Buffer>;
     /**
-     *
      * @param {LicenseOptions} licenseOptions - The options for this license generation
      * @param {KorraOptions} [options={}] An additional object of options
      * @example
@@ -89,9 +89,8 @@ declare class Korra extends Base {
      */
     generateLicense(licenseOptions: LicenseOptions, options?: KorraOptions): Promise<Buffer>;
     /**
-     *
-     * @param {String} firstTarget - The direct URL to the image of the first target
-     * @param {String} secondTarget - The direct URL to the image of the second target
+     * @param {string} firstTarget - The direct URL to the image of the first target
+     * @param {string} secondTarget - The direct URL to the image of the second target
      * @param {RequestOptions} [options={}] An additional object of options
      * @example
      * weebSH.korra.generateLoveShip('https://cdn.discordapp.com/avatars/128392910574977024/174c3436af3e4857accb4a32e2f9f220.webp?size=1024', 'https://cdn.discordapp.com/avatars/108638204629925888/e05fb8c7720c3618569828246e176fb4.webp?size=1024')
@@ -101,8 +100,7 @@ declare class Korra extends Base {
      */
     generateLoveShip(firstTarget: string, secondTarget: string, options?: RequestOptions): Promise<Buffer>;
     /**
-     *
-     * @param {String} avatar - The direct URL to the image
+     * @param {string} avatar - The direct URL to the image
      * @param {RequestOptions} [options={}] An additional object of options
      * @example
      * weebSH.korra.generateWaifuInsult('https://cdn.discordapp.com/avatars/140149699486154753/a_211d333073a63b3adfd13943268fc7a1.webp?size=1024')
@@ -116,6 +114,17 @@ declare namespace Korra {
     export { TaihouOptions, KorraOptions, KorraRequestOptions, RequestOptions, LicenseOptions, SimpleOptions };
 }
 import Base = require("../Base");
+type TaihouOptions = import('../../index.js').TaihouOptions;
+type KorraOptions = {
+    /**
+     * Whether to enable the request handler's burst mode, false by default
+     */
+    burst: boolean;
+    /**
+     * - Only apply when instantiating the module, regardless of the mode, define how many requests can be done in a minute. 0 makes it limitless
+     */
+    requestsPerMinute: number;
+};
 type RequestOptions = TaihouOptions & KorraRequestOptions;
 type SimpleOptions = {
     /**
@@ -145,17 +154,6 @@ type LicenseOptions = {
      */
     widgets?: Array<string>;
 };
-type KorraOptions = {
-    /**
-     * Whether to enable the request handler's burst mode, false by default
-     */
-    burst: boolean;
-    /**
-     * - Only apply when instantiating the module, regardless of the mode, define how many requests can be done in a minute. 0 makes it limitless
-     */
-    requestsPerMinute: number;
-};
-type TaihouOptions = import('../../index.js').TaihouOptions;
 type KorraRequestOptions = {
     /**
      * - Time in milliseconds before the next request in the queue should be executed. Is ignored if burst mode is enabled

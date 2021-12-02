@@ -7,12 +7,13 @@ export = Taihou;
  */
 /**
  * @typedef {Object} TaihouOptions
- * @prop {String} baseURL The base URL to use for each request, you may change this if you want to use staging or if you run a local instance (like: 'https://api.weeb.sh')
- * @prop {String} userAgent Strongly recommended, this should follow a BotName/Version/Environment pattern, or at least the bot name
- * @prop {Number} timeout Time in milliseconds before a request should be aborted
- * @prop {Object} headers An object of additional headers following a {'header': 'value'} format, note that those must not be content-type, user-agent or authorization header
+ * @prop {string} baseURL The base URL to use for each request, you may change this if you want to use staging or if you run a local instance (like: 'https://api.weeb.sh')
+ * @prop {string} userAgent Strongly recommended, this should follow a BotName/Version/Environment pattern, or at least the bot name
+ * @prop {number} timeout Time in milliseconds before a request should be aborted
+ * @prop {{ [header: string]: any }} headers An object of additional headers following a {'header': 'value'} format, note that those must not be content-type, user-agent or authorization header
  */
-/** @typedef {Object} PerServicesOptions
+/**
+ * @typedef {Object} PerServicesOptions
  * @prop {Partial<TophOptions & TaihouOptions>} toph Additional options to pass to Toph
  * @prop {Partial<TophOptions & TaihouOptions>} images Additional options to pass to Toph
  * @prop {Partial<KorraOptions & TaihouOptions>} korra Additional options to pass to Korra
@@ -24,53 +25,67 @@ export = Taihou;
  */
 /** @typedef {Partial<TaihouOptions & PerServicesOptions>} ConstructorOptions */
 /**
- *
- *
  * @class Taihou
- * @prop {String} token The token given in the constructor, formatted according to whether it is a wolke token or not
- * @prop {Toph} toph The Toph class - gives access to toph methods
- * @prop {Korra} korra The Korra class - gives access to korra methods
- * @prop {Shimakaze} shimakaze The Shimakaze class - gives access to shimakaze methods
- * @prop {Tama} tama The Tama class - gives access to tama methods
- * @prop {Toph} images - Equivalent for toph
- * @prop {Korra} imageGeneration - Equivalent for korra
- * @prop {Shimakaze} reputation - Equivalent for reputation
- * @prop {Tama} settings - Equivalent for tama
- * @prop {TaihouOptions} options - The options for this Taihou instance
  */
 declare class Taihou {
     /**
      * Creates an instance of Taihou.
-     * @param {String} token - The token, required to use weeb.sh
-     * @param {Boolean} wolken - A boolean representing whether the token is a wolke token or not, needed for taihou to work properly
+     * @param {string} token - The token, required to use weeb.sh
+     * @param {boolean} wolken - A boolean representing whether the token is a wolke token or not, needed for taihou to work properly
      * @param {ConstructorOptions} [options] - An object of options
      * @memberof Taihou
      */
     constructor(token: string, wolken: boolean, options?: ConstructorOptions);
+    /**
+     * The token given in the constructor, formatted according to whether it is a wolke token or not
+     * @type {string}
+     */
     token: string;
-    axios: any;
-    options: any;
+    /**
+     * @type {import("axios").AxiosInstance}
+     */
+    axios: import("axios").AxiosInstance;
+    /**
+     * - The options for this Taihou instance
+     * @type {TaihouOptions}
+     */
+    options: TaihouOptions;
+    /**
+     * The Toph class - gives access to toph methods
+     */
     toph: Toph;
+    /**
+     * The Korra class - gives access to korra methods
+     */
     korra: Korra;
+    /**
+     * The Shimakaze class - gives access to shimakaze methods
+     */
     shimakaze: Shimakaze;
+    /**
+     * The Tama class - gives access to tama methods
+     */
     tama: Tama;
+    /**
+     * - Equivalent for toph
+     */
     images: Toph;
+    /**
+     * - Equivalent for korra
+     */
     imageGeneration: Korra;
+    /**
+     * - Equivalent for shimakaze
+     */
     reputation: Shimakaze;
+    /**
+     * - Equivalent for tama
+     */
     settings: Tama;
 }
 declare namespace Taihou {
     export { TophOptions, KorraOptions, ShimakazeOptions, TamaOptions, TaihouOptions, PerServicesOptions, ConstructorOptions };
 }
-import Toph = require("./src/Toph/Toph.js");
-import Korra = require("./src/Korra/Korra.js");
-import Shimakaze = require("./src/Shimakaze/Shimakaze.js");
-import Tama = require("./src/Tama/Tama.js");
-type ConstructorOptions = Partial<TaihouOptions & PerServicesOptions>;
-type TophOptions = import('./src/Toph/Toph').TophOptions;
-type KorraOptions = import('./src/Korra/Korra').KorraOptions;
-type ShimakazeOptions = import('./src/Shimakaze/Shimakaze').ShimakazeOptions;
-type TamaOptions = import('./src/Tama/Tama').TamaOptions;
 type TaihouOptions = {
     /**
      * The base URL to use for each request, you may change this if you want to use staging or if you run a local instance (like: 'https://api.weeb.sh')
@@ -87,8 +102,19 @@ type TaihouOptions = {
     /**
      * An object of additional headers following a {'header': 'value'} format, note that those must not be content-type, user-agent or authorization header
      */
-    headers: any;
+    headers: {
+        [header: string]: any;
+    };
 };
+import Toph = require("./src/Toph/Toph.js");
+import Korra = require("./src/Korra/Korra.js");
+import Shimakaze = require("./src/Shimakaze/Shimakaze.js");
+import Tama = require("./src/Tama/Tama.js");
+type ConstructorOptions = Partial<TaihouOptions & PerServicesOptions>;
+type TophOptions = import('./src/Toph/Toph').TophOptions;
+type KorraOptions = import('./src/Korra/Korra').KorraOptions;
+type ShimakazeOptions = import('./src/Shimakaze/Shimakaze').ShimakazeOptions;
+type TamaOptions = import('./src/Tama/Tama').TamaOptions;
 type PerServicesOptions = {
     /**
      * Additional options to pass to Toph

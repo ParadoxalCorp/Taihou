@@ -11,121 +11,122 @@ const Collection = require('../Collection');
 
 /**
  * @typedef TamaOptions
- * @prop {Boolean} burst Whether to enable the request handler's burst mode, false by default
- * @prop {Number} requestsPerMinute - Only apply when instantiating the module, regardless of the mode, define how many requests can be done in a minute. 0 makes it limitless
- * @prop {Boolean} useCache - Defaults to true, this define whether to use the cache rather than always requesting to weeb.sh. The cache is updated whenever the setting is updated through Taihou
+ * @prop {boolean} burst Whether to enable the request handler's burst mode, false by default
+ * @prop {number} requestsPerMinute - Only apply when instantiating the module, regardless of the mode, define how many requests can be done in a minute. 0 makes it limitless
+ * @prop {boolean} useCache - Defaults to true, this define whether to use the cache rather than always requesting to weeb.sh. The cache is updated whenever the setting is updated through Taihou
  */
 
 /**
  * @typedef {Object} TamaRequestOptions
- * @prop {Number} beforeNextRequest - Only apply per-request, time in milliseconds before the next request in the queue should be executed. Is ignored if burst mode is enabled
- * @prop {Boolean} useCache - Defaults to true, this define whether to use the cache rather than always requesting to weeb.sh. The cache is updated whenever the setting is updated through Taihou
+ * @prop {number} beforeNextRequest - Only apply per-request, time in milliseconds before the next request in the queue should be executed. Is ignored if burst mode is enabled
+ * @prop {boolean} useCache - Defaults to true, this define whether to use the cache rather than always requesting to weeb.sh. The cache is updated whenever the setting is updated through Taihou
  */
 
 /** @typedef {TamaRequestOptions & TaihouOptions} RequestOptions */
 
 /**
  * @typedef CreateOrUpdateOptions
- * @prop {String} type - The type of the setting
- * @prop {String|Number} id - The id of the setting
+ * @prop {string} type - The type of the setting
+ * @prop {string|number} id - The id of the setting
  * @prop {Object} data - The data you want this setting to hold. Please note that existing data will be overriden by this, so in the case of an update, specify unchanged fields too
  */
 
 /**
  * @typedef ListSubSettingsOptions
- * @prop {String} type - The type of the setting
- * @prop {String|Number} id - The id of the setting
- * @prop {String} subType - The type of the sub-setting
+ * @prop {string} type - The type of the setting
+ * @prop {string|number} id - The id of the setting
+ * @prop {string} subType - The type of the sub-setting
  */
 
 /**
  * @typedef GetOrDeleteSubSettingOptions
- * @prop {String} type - The type of the setting
- * @prop {String|Number} id - The id of the setting
- * @prop {String} subType - The type of the sub-setting
- * @prop {String|Number} subId - The id of the sub-setting
+ * @prop {string} type - The type of the setting
+ * @prop {string|number} id - The id of the setting
+ * @prop {string} subType - The type of the sub-setting
+ * @prop {string|number} subId - The id of the sub-setting
  */
 
 /**
  * @typedef CreateOrUpdateSubSettingOptions
- * @prop {String} type - The type of the setting
- * @prop {String|Number} id - The id of the setting
- * @prop {String} subType - The type of the sub-setting
- * @prop {String|Number} subId - The id of the sub-setting
+ * @prop {string} type - The type of the setting
+ * @prop {string|number} id - The id of the setting
+ * @prop {string} subType - The type of the sub-setting
+ * @prop {string|number} subId - The id of the sub-setting
  * @prop {Object} data - The data you want this sub-setting to hold. Please note that existing data will be overriden by this, so in the case of an update, specify unchanged fields too
  */
 
- /** @typedef {Object} SubSetting
-  * @prop {String} id The ID of the setting
-  * @prop {String} type The type of the setting
-  * @prop {String} accountId The ID of the account that created this sub-setting
-  * @prop {Object} data The data contained by this sub-setting
-  * @prop {String} subId The ID of the sub-setting
-  * @prop {String} subType The type of the sub-setting
-  */
-
-  /** @typedef {Object} Setting
-  * @prop {String} id The ID of the setting
-  * @prop {String} type The type of the setting
-  * @prop {String} accountId The ID of the account that created this setting
-  * @prop {Object} data The data contained by this setting
-  */
-
- /**
-  * @typedef {Object} DeletedSubSetting
-  * @prop {String} status The HTTP status code of the request
-  * @prop {String} message A message describing the action taken
-  * @prop {SubSetting} subsetting The sub-setting object
-  */
-
-  /**
-  * @typedef {Object} DeleteSettingResponse
-  * @prop {String} status The HTTP status code of the request
-  * @prop {String} message A message describing the action taken
-  * @prop {Setting} setting The setting object
-  */
-
-  /**
-  * @typedef {Object} SettingResponse
-  * @prop {String} status The HTTP status code of the request
-  * @prop {Setting} setting The setting object
-  * @prop {Boolean} cached Whether this setting is returned from the cache
-  */
-
-  /**
-  * @typedef {Object} SubSettingResponse
-  * @prop {String} status The HTTP status code of the request
-  * @prop {SubSetting} subsetting The setting object
-  * @prop {Boolean} cached Whether this sub-setting is returned from the cache
-  */
-
-  /**
-  * @typedef {Object} SubSettingsList
-  * @prop {String} status The HTTP status code of the request
-  * @prop {Array<SubSetting>} subsettings An array of sub-settings
-  */
-
 /**
- *
- *
- * @class Tama
- * @prop {String} token The token given in the constructor of Taihou, formatted according to whether it is a wolke token or not
- * @prop {TophOptions & TaihouOptions} options The **effective** options; e.g, if you specified options specific to Tama, those override the base ones
- * @prop {Collection} settingsCache The settings cache
- * @prop {Collection} subSettingsCache The sub-settings cache
+ * @typedef {Object} SubSetting
+ * @prop {string} id The ID of the setting
+ * @prop {string} type The type of the setting
+ * @prop {string} accountId The ID of the account that created this sub-setting
+ * @prop {Object} data The data contained by this sub-setting
+ * @prop {string} subId The ID of the sub-setting
+ * @prop {string} subType The type of the sub-setting
  */
 
+/**
+ * @typedef {Object} Setting
+ * @prop {string} id The ID of the setting
+ * @prop {string} type The type of the setting
+ * @prop {string} accountId The ID of the account that created this setting
+ * @prop {Object} data The data contained by this setting
+ */
+
+/**
+ * @typedef {Object} DeletedSubSetting
+ * @prop {string} status The HTTP status code of the request
+ * @prop {string} message A message describing the action taken
+ * @prop {SubSetting} subsetting The sub-setting object
+ */
+
+/**
+ * @typedef {Object} DeleteSettingResponse
+ * @prop {string} status The HTTP status code of the request
+ * @prop {string} message A message describing the action taken
+ * @prop {Setting} setting The setting object
+ */
+
+/**
+ * @typedef {Object} SettingResponse
+ * @prop {string} status The HTTP status code of the request
+ * @prop {Setting} setting The setting object
+ * @prop {boolean} cached Whether this setting is returned from the cache
+ */
+
+/**
+ * @typedef {Object} SubSettingResponse
+ * @prop {string} status The HTTP status code of the request
+ * @prop {SubSetting} subsetting The setting object
+ * @prop {boolean} cached Whether this sub-setting is returned from the cache
+ */
+
+/**
+ * @typedef {Object} SubSettingsList
+ * @prop {string} status The HTTP status code of the request
+ * @prop {Array<SubSetting>} subsettings An array of sub-settings
+ */
+
+/**
+ * @class Tama
+ */
 class Tama extends Base {
     /**
-     *
-     * @param {String} token - The token
+     * @param {string} token - The token
      * @param {TaihouOptions & TamaOptions} options - The options for this instance
      * @param {Axios} axios - The axios instance
      */
-
     constructor(token, options, axios) {
         super(options);
+        /**
+         * The token given in the constructor of Taihou, formatted according to whether it is a wolke token or not
+         * @type {string}
+         */
         this.token = token;
+        /**
+         * The **effective** options; e.g, if you specified options specific to Tama, those override the base ones
+         * @type {TamaOptions & TaihouOptions}
+         */
         this.options = options.tama || options.images ? Object.assign({ ...options
         }, options.tama || options.images) : options;
         this.options.requestsPerMinute = this.options.requestsPerMinute || constants.tama.requestsPerMinute;
@@ -133,7 +134,15 @@ class Tama extends Base {
             this.options.useCache = true;
         }
         this.axios = axios;
+        /**
+         * The settings cache
+         * @type {Collection<string, SettingResponse>}
+         */
         this.settingsCache = new Collection();
+        /**
+         * The sub-settings cache
+         * @type {Collection<string, SubSettingResponse>}
+         */
         this.subSettingsCache = new Collection();
         this.getStatus = this.getStatus.bind(this);
         this.getSetting = this.getSetting.bind(this);
@@ -156,7 +165,7 @@ class Tama extends Base {
      * weebSH.tama.getStatus()
      *  .then(console.log)
      *  .catch(console.error)
-     * @returns {Promise<Boolean>} Whether or not Tama is online
+     * @returns {Promise<boolean>} Whether or not Tama is online
      */
     async getStatus(options = {}) {
         options = Object.assign({ ...this.options
@@ -168,8 +177,8 @@ class Tama extends Base {
     /**
      * Get a setting by type and ID
      *
-     * @param {String} type - The type of the setting
-     * @param {String|Number} id - The ID of the setting
+     * @param {string} type - The type of the setting
+     * @param {string|number} id - The ID of the setting
      * @param {RequestOptions} [options={}] - An additional object of options
      * @example
      * weebSH.tama.getSetting('guilds', '300407204987666432')
@@ -203,6 +212,7 @@ class Tama extends Base {
     /**
      * Create a new setting
      * Technically you can update an existing setting with this method too, the only reason there is two different methods is to be clearer
+     *
      * @param {CreateOrUpdateOptions} createOptions - An object of parameters
      * @param {RequestOptions} [options={}] An additional object of options
      * @example
@@ -230,6 +240,7 @@ class Tama extends Base {
     /**
      * Update a setting
      * Technically you can create a setting with this method too, the only reason there is two different methods is to be clearer
+     *
      * @param {CreateOrUpdateOptions} updateOptions - An object of parameters
      * @param {RequestOptions} [options={}] An additional object of options
      * @example
@@ -245,8 +256,9 @@ class Tama extends Base {
     /**
      * Delete a setting by type and ID
      * If options.useCache is true, the setting will also be deleted from the cache. Note that this however won't delete the subsettings
-     * @param {String} type - The type of the setting
-     * @param {String|Number} id - The ID of the setting
+     *
+     * @param {string} type - The type of the setting
+     * @param {string|number} id - The ID of the setting
      * @param {RequestOptions} [options={}] An additional object of options
      * @example
      * weebSH.tama.deleteSetting('guilds', '300407204987666432')
@@ -293,7 +305,7 @@ class Tama extends Base {
     /**
      * Get a sub-setting by type and id
      *
-     * @param {getOrDeleteSubSettingOptions} getSubSettingOptions - An object of parameters
+     * @param {GetOrDeleteSubSettingOptions} getSubSettingOptions - An object of parameters
      * @param {RequestOptions} [options={}] An additional object of options
      * @example
      * weebSH.tama.getSubSetting({type: 'guilds', id: '300407204987666432', subType: 'channels', subId: '439457506960605185'})
@@ -331,6 +343,7 @@ class Tama extends Base {
     /**
      * Create a sub-setting
      * Technically this method can be used to update a sub-setting too, the only reason there is two different methods is to be clearer
+     *
      * @param {CreateOrUpdateSubSettingOptions} createOptions - An object of parameters
      * @param {RequestOptions} [options={}] An additional object of options
      * @example
@@ -362,6 +375,7 @@ class Tama extends Base {
     /**
      * Update a sub-setting
      * Technically this method can be used to create a sub-setting too, the only reason there is two different methods is to be clearer
+     *
      * @param {CreateOrUpdateSubSettingOptions} updateOptions - An object of parameters
      * @param {RequestOptions} [options={}] An additional object of options
      * @example
@@ -377,7 +391,7 @@ class Tama extends Base {
     /**
      * Delete a sub-setting
      *
-     * @param {getOrDeleteSubSettingOptions} deleteOptions - An object of parameters
+     * @param {GetOrDeleteSubSettingOptions} deleteOptions - An object of parameters
      * @param {RequestOptions} [options={}] An additional object of options
      * @example
      * weebSH.tama.deleteSubSetting({type: 'guilds', id: '300407204987666432', subType: 'channels', subId: '439457506960605185'})

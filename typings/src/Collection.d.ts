@@ -10,14 +10,12 @@ declare class Collection<K, V> {
     /**
      * @param {K} key
      * @param {V} val
-     * @returns
      */
     set(key: K, val: V): any;
     _array: any[];
     _keyArray: any[];
     /**
      * @param {K} key
-     * @returns
      */
     delete(key: K): any;
     /**

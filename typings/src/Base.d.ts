@@ -1,11 +1,22 @@
 export = Base;
+/**
+ * @abstract
+ */
 declare class Base {
-    constructor(options: any);
+    /**
+     * @param {{ requestPerMinutes?: number; burst?: boolean }} [options]
+     */
+    constructor(options?: {
+        requestPerMinutes?: number;
+        burst?: boolean;
+    });
     requestHandler: RequestHandler;
     /**
-     *
-     *
-     * @param {any} url - The URL
+     * @type {import("axios").AxiosInstance}
+     */
+    axios: import("axios").AxiosInstance;
+    /**
+     * @param {string} url - The URL
      * @param {any} options - The options
      * @memberof Base
      * @private
@@ -13,32 +24,26 @@ declare class Base {
      */
     private _status;
     /**
-     *
-     *
-     * @param {any} url - The URL
-     * @param {any} method - The method
+     * @param {string} url - The URL
+     * @param {string} method - The method
      * @param {any} options - The options
-     * @returns {function} - The function created to execute the request
+     * @returns {Promise<import("axios").AxiosResponse<any>>} - The function created to execute the request
      * @memberof Base
      * @private
      */
     private _formatRequest;
     /**
-     *
-     *
      * @param {any} baseParams - The base params
      * @param {any} paramsToAdd - The params to add
      * @param {any} options - The options
-     * @returns {object} - The baseParams object with the parameters added
+     * @returns {any} - The baseParams object with the parameters added
      * @memberof Base
      * @private
      */
     private _addURLParams;
     /**
-     *
-     *
      * @param {string} path - The path
-     * @returns {Promise<any>} The file
+     * @returns {Promise<Buffer>} The file
      * @private
      * @memberof Base
      */
