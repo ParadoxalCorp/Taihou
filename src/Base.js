@@ -3,15 +3,23 @@
 const RequestHandler = require('./RequestHandler');
 const fs = require('fs');
 
+/**
+ * @abstract
+ */
 class Base {
+    /**
+     * @param {{ requestPerMinutes?: number; burst?: boolean }} [options]
+     */
     constructor(options) {
         this.requestHandler = new RequestHandler(options);
+        /**
+         * @type {import("axios").AxiosInstance}
+         */
+        this.axios;
     }
 
     /**
-     * 
-     * 
-     * @param {any} url - The URL
+     * @param {string} url - The URL
      * @param {any} options - The options
      * @memberof Base
      * @private
@@ -22,12 +30,10 @@ class Base {
     }
 
     /**
-     * 
-     * 
-     * @param {any} url - The URL
-     * @param {any} method - The method
+     * @param {string} url - The URL
+     * @param {string} method - The method
      * @param {any} options - The options
-     * @returns {function} - The function created to execute the request
+     * @returns {Promise<import("axios").AxiosResponse<any>>} - The function created to execute the request
      * @memberof Base
      * @private
      */
@@ -43,7 +49,7 @@ class Base {
             if (options.axios) {
                 Object.assign(config, options.axios);
             }
-            
+
             return this.axios({
                 method,
                 url,
@@ -53,12 +59,10 @@ class Base {
     }
 
     /**
-     * 
-     * 
      * @param {any} baseParams - The base params
      * @param {any} paramsToAdd - The params to add
      * @param {any} options - The options
-     * @returns {object} - The baseParams object with the parameters added
+     * @returns {any} - The baseParams object with the parameters added
      * @memberof Base
      * @private
      */
@@ -76,10 +80,8 @@ class Base {
     }
 
     /**
-     * 
-     * 
      * @param {string} path - The path
-     * @returns {Promise<any>} The file
+     * @returns {Promise<Buffer>} The file
      * @private
      * @memberof Base
      */

@@ -7,115 +7,124 @@ const constants = require('../constants');
 
 /**
  * @typedef ShimakazeOptions
- * @prop {Boolean} burst Whether to enable the request handler's burst mode, false by default
- * @prop {Number} requestsPerMinute - Only apply when instantiating the module, regardless of the mode, define how many requests can be done in a minute. 0 makes it limitless
- * @prop {String} botID - The ID of the bot reputation database to access, if you specify it here, you won't need to specify it in every methods. You can always override it by specifying it in the method, note that methods which don't take objects as argument (methods with 2 or fewer parameters) will take the passed arguments count; As in, if the method expect at least 2 arguments (the bot id and something else) and you pass only one argument, it will be assumed that you want to use the botID set in the constructor
+ * @prop {boolean} burst Whether to enable the request handler's burst mode, false by default
+ * @prop {number} requestsPerMinute - Only apply when instantiating the module, regardless of the mode, define how many requests can be done in a minute. 0 makes it limitless
+ * @prop {string} botID - The ID of the bot reputation database to access, if you specify it here, you won't need to specify it in every methods. You can always override it by specifying it in the method, note that methods which don't take objects as argument (methods with 2 or fewer parameters) will take the passed arguments count; As in, if the method expect at least 2 arguments (the bot id and something else) and you pass only one argument, it will be assumed that you want to use the botID set in the constructor
  */
 
 /**
- * @typedef {Object} KorraRequestOptions
- * @prop {Number} beforeNextRequest - Time in milliseconds before the next request in the queue should be executed. Is ignored if burst mode is enabled
+ * @typedef {Object} ShimakazeRequestOptions
+ * @prop {number} beforeNextRequest - Time in milliseconds before the next request in the queue should be executed. Is ignored if burst mode is enabled
  */
 
-/** @typedef {TaihouOptions & KorraRequestOptions} RequestOptions */
+/** @typedef {TaihouOptions & ShimakazeRequestOptions} RequestOptions */
 
 /**
  * @typedef GiveReputationOptions
- * @prop {String} botID - The ID of the bot reputation database to use
- * @prop {String} targetID - The ID of the user to give reputation to
- * @prop {String} sourceID - The ID of the user who is giving reputation
+ * @prop {string} botID - The ID of the bot reputation database to use
+ * @prop {string} targetID - The ID of the user to give reputation to
+ * @prop {string} sourceID - The ID of the user who is giving reputation
  */
 
 /**
  * @typedef ResetUserReputationOptions
- * @prop {String} botID - The ID of the bot reputation database to use
- * @prop {String} targetID - The ID of the user to reset
- * @prop {Boolean} [resetCooldown=false] - Whether to reset the user cooldown field too, false by default
+ * @prop {string} botID - The ID of the bot reputation database to use
+ * @prop {string} targetID - The ID of the user to reset
+ * @prop {boolean} [resetCooldown=false] - Whether to reset the user cooldown field too, false by default
  */
 
 /**
  * @typedef IncreaseUserReputationOptions
- * @prop {String} botID - The ID of the bot reputation database to use
- * @prop {String} targetID - The ID of the user who should get their reputation increased
- * @prop {Number} increase - By how much should the user reputation be increased
+ * @prop {string} botID - The ID of the bot reputation database to use
+ * @prop {string} targetID - The ID of the user who should get their reputation increased
+ * @prop {number} increase - By how much should the user reputation be increased
  */
 
 /**
  * @typedef DecreaseUserReputationOptions
- * @prop {String} botID - The ID of the bot reputation database to use
- * @prop {String} targetID - The ID of the user from who's reputation should be decreased
- * @prop {Number} decrease - By how much should the user reputation be decreased
+ * @prop {string} botID - The ID of the bot reputation database to use
+ * @prop {string} targetID - The ID of the user from who's reputation should be decreased
+ * @prop {number} decrease - By how much should the user reputation be decreased
  */
 
 /**
  * @typedef ReputationSettings
- * @prop {Number} [reputationPerDay] - The maximum reputation a user can give per **reputationCooldown** (so per day by default)
- * @prop {Number} [maximumReputation] - The maximum reputation a user can ever have (there is no maximum by default)
- * @prop {Number} [maximumReputationReceivedDay] - How much reputation a user can receive per day (there is no maximum by default)
- * @prop {Number} [reputationCooldown] - Cooldown per reputation, this is set to time in seconds (must be >= 300)
+ * @prop {number} [reputationPerDay] - The maximum reputation a user can give per **reputationCooldown** (so per day by default)
+ * @prop {number} [maximumReputation] - The maximum reputation a user can ever have (there is no maximum by default)
+ * @prop {number} [maximumReputationReceivedDay] - How much reputation a user can receive per day (there is no maximum by default)
+ * @prop {number} [reputationCooldown] - Cooldown per reputation, this is set to time in seconds (must be >= 300)
  */
 
- /** @typedef {Object} UserReputationObject
-  * @prop {Number} reputation The amount of reputation this user has
-  * @prop {Array<String>} cooldown Array of timestamps referring to the last time(s) this user has given reputation to another user
-  * @prop {Array<String>} givenReputation Array of timestamps referring to the last time(s) this user has received reputation from another user
-  * @prop {String} userId The ID of the user
-  * @prop {String} botId ID of the bot that was passed in the first call to take or give reputation to the user
-  * @prop {String} accountId Internal id associated with the token calling the API
-  * @prop {Number} [availableReputations] How many reputations the user may give out, this field is optional and may not always be present
-  * @prop {Array<Number>} [nextAvailableReputations] Array of timestamps referring to the remaining cooldown time until the user can give out reputation from now, this field is optional and may not always be present
-  */
+/**
+ * @typedef {Object} UserReputationObject
+ * @prop {number} reputation The amount of reputation this user has
+ * @prop {Array<string>} cooldown Array of timestamps referring to the last time(s) this user has given reputation to another user
+ * @prop {Array<string>} givenReputation Array of timestamps referring to the last time(s) this user has received reputation from another user
+ * @prop {string} userId The ID of the user
+ * @prop {string} botId ID of the bot that was passed in the first call to take or give reputation to the user
+ * @prop {string} accountId Internal id associated with the token calling the API
+ * @prop {number} [availableReputations] How many reputations the user may give out, this field is optional and may not always be present
+ * @prop {Array<number>} [nextAvailableReputations] Array of timestamps referring to the remaining cooldown time until the user can give out reputation from now, this field is optional and may not always be present
+ */
 
 /**
  * @typedef {Object} GetReputationResponse
- * @prop {String} date Current server time in UTC
- * @prop {Number} status The HTTP status code of the request
+ * @prop {string} date Current server time in UTC
+ * @prop {number} status The HTTP status code of the request
  * @prop {UserReputationObject} user The user's reputation object with all optional fields
  */
 
- /**
+/**
  * @typedef {Object} ReputationResponse
  * @prop {UserReputationObject} user The user's reputation object without the optional fields
- * @prop {Number} status The HTTP status code of the request
+ * @prop {number} status The HTTP status code of the request
  */
 
- /**
+/**
  * @typedef {Object} GiveReputationResponse
- * @prop {Number} status The HTTP status code of the request
- * @prop {String} date Current server time in UTC
- * @prop {String} message Informational message
- * @prop {Number} code The status code of the request, anything else than 0 represent a failed request, refer to https://docs.weeb.sh/#give-reputation-to-user for a list of the error codes
+ * @prop {number} status The HTTP status code of the request
+ * @prop {string} date Current server time in UTC
+ * @prop {string} message Informational message
+ * @prop {number} code The status code of the request, anything else than 0 represent a failed request, refer to https://docs.weeb.sh/#give-reputation-to-user for a list of the error codes
  * @prop {UserReputationObject} sourceUser The reputation object of the user who gave the reputation, without the optional fields
  * @prop {UserReputationObject} targetUser The reputation object of the user who received the reputation, without the optional fields
  */
 
- /**
+/**
  * @typedef {Object} ReputationSettingsResponse
- * @prop {Number} reputationPerDay The maximum reputation a user can give per **reputationCooldown** (so per day by default)
- * @prop {Number} maximumReputation The maximum reputation a user can ever have (there is no maximum by default)
- * @prop {Number} maximumReputationReceivedDay How much reputation a user can receive per day (there is no maximum by default)
- * @prop {Number} reputationCooldown Cooldown per reputation, this is set to time in seconds (must be >= 300)
- * @prop {String} accountId Internal id associated with the token calling the API
+ * @prop {number} reputationPerDay The maximum reputation a user can give per **reputationCooldown** (so per day by default)
+ * @prop {number} maximumReputation The maximum reputation a user can ever have (there is no maximum by default)
+ * @prop {number} maximumReputationReceivedDay How much reputation a user can receive per day (there is no maximum by default)
+ * @prop {number} reputationCooldown Cooldown per reputation, this is set to time in seconds (must be >= 300)
+ * @prop {string} accountId Internal id associated with the token calling the API
  */
-
- /**
-  * @typedef {Object} SettingsResponse
-  * @prop {Number} status The HTTP status code of the request
-  * @prop {ReputationSettingsResponse} settings The settings
-  */
 
 /**
- *
- *
- * @class Shimakaze
- * @prop {String} token The token given in the constructor of Taihou, formatted according to whether it is a wolke token or not
- * @prop {TaihouOptions & ShimakazeOptions} options The **effective** options; e.g, if you specified options specific to Shimakaze, those override the base ones
+ * @typedef {Object} SettingsResponse
+ * @prop {number} status The HTTP status code of the request
+ * @prop {ReputationSettingsResponse} settings The settings
  */
 
+/**
+ * @class Shimakaze
+ */
 class Shimakaze extends Base {
+    /**
+     * @param {string} token
+     * @param {ShimakazeOptions & TaihouOptions} options
+     * @param {import("axios").AxiosInstance} axios
+     */
     constructor(token, options, axios) {
         super(options);
+        /**
+         * The token given in the constructor of Taihou, formatted according to whether it is a wolke token or not
+         * @type {string}
+         */
         this.token = token;
+        /**
+         * The **effective** options; e.g, if you specified options specific to Shimakaze, those override the base ones
+         * @type {ShimakazeOptions & TaihouOptions}
+         */
         this.options = options.shimakaze || options.images ? Object.assign({ ...options }, options.shimakaze || options.images) : options;
         this.options.requestsPerMinute = this.options.requestsPerMinute || constants.shimakaze.requestsPerMinute;
         this.axios = axios;
@@ -139,7 +148,7 @@ class Shimakaze extends Base {
      * weebSH.shimakaze.getStatus()
      *  .then(console.log)
      *  .catch(console.error)
-     * @returns {Promise<Boolean>} Whether or not Shimakaze is online
+     * @returns {Promise<boolean>} Whether or not Shimakaze is online
      */
     async getStatus(options = {}) {
         options = Object.assign({ ...this.options
@@ -152,8 +161,8 @@ class Shimakaze extends Base {
     /**
      * Get the reputation of a user
      *
-     * @param {String} botID - The ID of the bot reputation database to access
-     * @param {String} targetID - The ID of the user to get reputation of
+     * @param {string} botID - The ID of the bot reputation database to access
+     * @param {string} targetID - The ID of the user to get reputation of
      * @param {RequestOptions} [options={}] An additional object of options
      * @example
      * weebSH.shimakaze.getUserReputation('327144735359762432', '184051394179891201')
@@ -178,6 +187,7 @@ class Shimakaze extends Base {
     /**
      * Give reputation to a user.
      * Note that you should catch the rejection of this request and inspect the error.response.data.code property of the response to determine the exact reason why it failed
+     *
      * @param {GiveReputationOptions} reputationOptions An object of options
      * @param {RequestOptions} [options={}] An additional object of options
      * @example

@@ -1,16 +1,41 @@
 export = RequestHandler;
 declare class RequestHandler {
-    constructor(options?: {});
-    requestsPerMinutes: any;
+    /**
+     * @param {{ requestPerMinutes?: number; burst?: boolean; }} options
+     */
+    constructor(options?: {
+        requestPerMinutes?: number;
+        burst?: boolean;
+    });
+    /**
+     * @type {number}
+     */
+    requestsPerMinutes: number;
+    /**
+     * @type {number}
+     */
     interval: number;
+    /**
+     * @type {boolean}
+     */
     burst: boolean;
-    queue: any[];
+    /**
+     * @type {Array<any>}
+     */
+    queue: Array<any>;
+    /**
+     * @type {number}
+     */
     requestsDone: number;
     sweepInterval: number | boolean;
     queueRequest(request: any, options?: {}): any;
     execute(): Promise<void>;
     cooldownLift: any;
     resume: any;
-    sleep(ms: any): any;
+    /**
+     * @param {number} ms
+     * @returns {Promise<void>}
+     */
+    sleep(ms: number): Promise<void>;
     sweep(): void;
 }
