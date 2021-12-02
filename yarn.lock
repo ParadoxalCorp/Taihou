@@ -2,11 +2,6 @@
 # yarn lockfile v1
 
 
-"@discordjs/collection@0.3.2":
-  "integrity" "sha512-dMjLl60b2DMqObbH1MQZKePgWhsNe49XkKBZ0W5Acl5uVV43SN414i2QfZwRI7dXAqIn8pEWD2+XXQFn9KWxqg=="
-  "resolved" "https://registry.npmjs.org/@discordjs/collection/-/collection-0.3.2.tgz"
-  "version" "0.3.2"
-
 "axios@^0.21.1":
   "integrity" "sha512-87otirqUw3e8CzHTMO+/9kh/FSgXt/eVDvipijwDtEuwbkySWZ9SBm6VEubmJ/kLKEoLQV/POhxXFb66bfekfg=="
   "resolved" "https://registry.npmjs.org/axios/-/axios-0.21.2.tgz"

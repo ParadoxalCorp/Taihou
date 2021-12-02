@@ -2,10 +2,10 @@
 
 const Base = require('../Base');
 const constants = require('../constants');
-const Collection = require('@discordjs/collection').Collection;
+const Collection = require('../Collection');
 
 /**
- * @typedef {import('../types').TaihouOptions} TaihouOptions
+ * @typedef {import('../../index.js').TaihouOptions} TaihouOptions
  * @typedef {import('axios').AxiosInstance} Axios
  */
 
@@ -110,7 +110,7 @@ const Collection = require('@discordjs/collection').Collection;
  *
  * @class Tama
  * @prop {String} token The token given in the constructor of Taihou, formatted according to whether it is a wolke token or not
- * @prop {TamaOptions & TaihouOptions} options The **effective** options; e.g, if you specified options specific to Tama, those override the base ones
+ * @prop {TophOptions & TaihouOptions} options The **effective** options; e.g, if you specified options specific to Tama, those override the base ones
  * @prop {Collection} settingsCache The settings cache
  * @prop {Collection} subSettingsCache The sub-settings cache
  */
@@ -293,7 +293,7 @@ class Tama extends Base {
     /**
      * Get a sub-setting by type and id
      *
-     * @param {GetOrDeleteSubSettingOptions} getSubSettingOptions - An object of parameters
+     * @param {getOrDeleteSubSettingOptions} getSubSettingOptions - An object of parameters
      * @param {RequestOptions} [options={}] An additional object of options
      * @example
      * weebSH.tama.getSubSetting({type: 'guilds', id: '300407204987666432', subType: 'channels', subId: '439457506960605185'})
@@ -377,7 +377,7 @@ class Tama extends Base {
     /**
      * Delete a sub-setting
      *
-     * @param {GetOrDeleteSubSettingOptions} deleteOptions - An object of parameters
+     * @param {getOrDeleteSubSettingOptions} deleteOptions - An object of parameters
      * @param {RequestOptions} [options={}] An additional object of options
      * @example
      * weebSH.tama.deleteSubSetting({type: 'guilds', id: '300407204987666432', subType: 'channels', subId: '439457506960605185'})

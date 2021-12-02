@@ -9,10 +9,10 @@ const constants = require('./src/constants.js');
 const axios = require('axios');
 
 /**
- * @typedef {import('./src/types').TophOptions} TophOptions
- * @typedef {import('./src/types').KorraOptions} KorraOptions
- * @typedef {import('./src/types').ShimakazeOptions} ShimakazeOptions
- * @typedef {import('./src/types').TamaOptions} TamaOptions
+ * @typedef {import('./src/Toph/Toph').TophOptions} TophOptions
+ * @typedef {import('./src/Korra/Korra').KorraOptions} KorraOptions
+ * @typedef {import('./src/Shimakaze/Shimakaze').ShimakazeOptions} ShimakazeOptions
+ * @typedef {import('./src/Tama/Tama').TamaOptions} TamaOptions
  */
 
 /**
@@ -24,17 +24,17 @@ const axios = require('axios');
  */
 
  /** @typedef {Object} PerServicesOptions
-  * @prop {TophOptions & TaihouOptions} toph Additional options to pass to Toph
-  * @prop {TophOptions & TaihouOptions} images Additional options to pass to Toph
-  * @prop {KorraOptions & TaihouOptions} korra Additional options to pass to Korra
-  * @prop {KorraOptions & TaihouOptions} imageGeneration Additional options to pass to Korra
-  * @prop {ShimakazeOptions & TaihouOptions} shimakaze Additional options to pass to Shimakaze
-  * @prop {ShimakazeOptions & TaihouOptions} reputation Additional options to pass to Shimakaze
-  * @prop {TamaOptions & TaihouOptions} tama Additional options to pass to Tama
-  * @prop {TamaOptions & TaihouOptions} settings Additional options to pass to Tama
+  * @prop {Partial<TophOptions & TaihouOptions>} toph Additional options to pass to Toph
+  * @prop {Partial<TophOptions & TaihouOptions>} images Additional options to pass to Toph
+  * @prop {Partial<KorraOptions & TaihouOptions>} korra Additional options to pass to Korra
+  * @prop {Partial<KorraOptions & TaihouOptions>} imageGeneration Additional options to pass to Korra
+  * @prop {Partial<ShimakazeOptions & TaihouOptions>} shimakaze Additional options to pass to Shimakaze
+  * @prop {Partial<ShimakazeOptions & TaihouOptions>} reputation Additional options to pass to Shimakaze
+  * @prop {Partial<TamaOptions & TaihouOptions>} tama Additional options to pass to Tama
+  * @prop {Partial<TamaOptions & TaihouOptions>} settings Additional options to pass to Tama
   */
 
-  /** @typedef {TaihouOptions & PerServicesOptions} ConstructorOptions */
+  /** @typedef {Partial<TaihouOptions & PerServicesOptions>} ConstructorOptions */
 
 /**
  *

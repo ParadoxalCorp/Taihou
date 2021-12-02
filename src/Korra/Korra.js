@@ -3,7 +3,7 @@
 const Base = require('../Base');
 const constants = require('../constants');
 
-/** @typedef {import('../types').TaihouOptions} TaihouOptions */
+/** @typedef {import('../../index.js').TaihouOptions} TaihouOptions */
 
 /**
  * @typedef KorraOptions
